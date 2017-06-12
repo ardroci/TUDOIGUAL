@@ -1,0 +1,5 @@
+# Add your requirements here like:
+pytest
+#pytest-cov
+pycrypto
+pyscaffold

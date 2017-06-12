@@ -1,0 +1,1072 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "TUDOIGUAL" "1" "Jun 03, 2017" "0.0.post0.dev38+n075f340.dirty" "TUDOIGUAL"
+.SH NAME
+tudoigual \- TUDOIGUAL 0.0.post0.dev38+n075f340.dirty
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+This is the documentation of \fBTUDOIGUAL\fP\&.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+This is the main page of your project’s \fI\%Sphinx\fP
+documentation. It is formatted in \fI\%reStructuredText\fP\&. Add additional pages by creating
+rst\-files in \fBdocs\fP and adding them to the \fI\%toctree\fP below. Use then
+\fI\%references\fP in order to link
+them from this page, e.g. authors and changes\&.
+.sp
+It is also possible to refer to the documentation of other Python packages
+with the \fI\%Python domain syntax\fP\&. By default you
+can reference the documentation of \fI\%Sphinx\fP,
+\fI\%Python\fP, \fI\%NumPy\fP, \fI\%SciPy\fP, \fI\%matplotlib\fP, \fI\%Pandas\fP, \fI\%Scikit\-Learn\fP\&. You can add more by
+extending the \fBintersphinx_mapping\fP in your Sphinx’s \fBconf.py\fP\&.
+.sp
+The pretty useful extension \fI\%autodoc\fP is activated by
+default and lets you include documentation from docstrings. Docstrings can
+be written in \fI\%Google\fP
+(recommended!), \fI\%NumPy\fP
+and \fI\%classical\fP
+style.
+.UNINDENT
+.UNINDENT
+.SH CONTENTS
+.SS License
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+Copyright 2017 rcoliveira
+
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Developers
+.INDENT 0.0
+.IP \(bu 2
+rcoliveira <\fI\%rcoliveira314@gmail.com\fP>
+.IP \(bu 2
+joao silva
+.IP \(bu 2
+joaquim mussandi
+.UNINDENT
+.SS Changelog
+.SS Version 0.1
+.INDENT 0.0
+.IP \(bu 2
+RSA
+.IP \(bu 2
+ECC
+.IP \(bu 2
+ECDSA
+.IP \(bu 2
+CHAP
+.IP \(bu 2
+PKI
+.UNINDENT
+.SS Modules
+.SS tudoigual package
+.SS Subpackages
+.SS tudoigual.ciphers package
+.SS Submodules
+.SS tudoigual.ciphers.AES module
+.INDENT 0.0
+.TP
+.B class tudoigual.ciphers.AES.AES_Cipher
+Bases: \fBobject\fP
+.sp
+Implementation of the Advanced Encryption Standard cipher in mode Cipher Block Chaining and Counter Mode. Both with PKCS7 Padding or with no padding.
+.INDENT 7.0
+.TP
+.B decrypt(ciphertext, **kwargs)
+Decrypt given ciphertext.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBpad\fP (\fIstr\fP) – type of padding.
+default is PKCS7.
+.IP \(bu 2
+\fBmode\fP (\fIint\fP) – cipher mode of operation (2 \- cipher block chaining, 6 \- counter mode)
+default is cipher block chainig.
+.UNINDENT
+.TP
+.B Returns
+Plaintext.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B encrypt(plaintext, **kwargs)
+Encrypt given plaintext.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBpad\fP (\fIstr\fP) – Padding scheme, default is PKCS7.
+.IP \(bu 2
+\fBmode\fP (\fIint\fP) – Cipher mode of operation (2 \- Cipher Block Chaining, 6 \- Counter Mode)
+Cipher Block Chaining is the default mode.
+.IP \(bu 2
+\fBiv\fP (\fIstr\fP) – Initial vector. The default value is none so it would be created a 16 bytes random initial vector for the cipher.
+.UNINDENT
+.TP
+.B Returns
+A tuple containing the iv and the ciphertext.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Module contents
+.SS tudoigual.dh package
+.SS Submodules
+.SS tudoigual.dh.diffie_hellman module
+.SS Module contents
+.SS tudoigual.ec package
+.SS Submodules
+.SS tudoigual.ec.ec_elgamal module
+.INDENT 0.0
+.TP
+.B class tudoigual.ec.ec_elgamal.EC_ElGamal(ec=<tudoigual.utils.ec_curves.EC_curve object>, key=None, cert=None, password_file=”)
+Bases: \fBobject\fP
+.INDENT 7.0
+.TP
+.B decrypt(Y, iv, ciphertext, salt, tag)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B encrypt(message)
+ECIES
+.UNINDENT
+.INDENT 7.0
+.TP
+.B gen_keys()
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_pkB(x, y)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B sign(data, sk, hash=<built\-in function openssl_sha256>, k=None)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B verify_signature(r, s, pk, data, hash=<built\-in function openssl_sha256>)
+.UNINDENT
+.UNINDENT
+.SS tudoigual.ec.ecdsa module
+.INDENT 0.0
+.TP
+.B class tudoigual.ec.ecdsa.Signature(r, s)
+Bases: \fBobject\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.ec.ecdsa.sign(self, data, sk, hash=<built\-in function openssl_sha256>, k=None)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.ec.ecdsa.verify_signature(self, signature, pk, data, hash=<built\-in function openssl_sha256>)
+.UNINDENT
+.SS tudoigual.ec.gen module
+.INDENT 0.0
+.TP
+.B class tudoigual.ec.gen.ECPoint(x, y, ec=<tudoigual.utils.ec_curves.EC_curve object>)
+Bases: \fBobject\fP
+.sp
+A class defining a point for the EC
+.INDENT 7.0
+.TP
+.B doublePoint()
+.UNINDENT
+.INDENT 7.0
+.TP
+.B ec = <tudoigual.utils.ec_curves.EC_curve object>
+.UNINDENT
+.INDENT 7.0
+.TP
+.B multiplyPointByScalar(n)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B sum(p2)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B x = 0
+.UNINDENT
+.INDENT 7.0
+.TP
+.B y = 0
+.UNINDENT
+.UNINDENT
+.SS tudoigual.ec.hkdf module
+.sp
+This document specifies a simple Hashed Message Authentication Code
+(HMAC)\-based key derivation function (HKDF), which can be used as a building
+block in various protocols and applications.  The key derivation function (KDF)
+is intended to support a wide range of applications and requirements, and is
+conservative in its use of cryptographic hash functions.
+.INDENT 0.0
+.TP
+.B class tudoigual.ec.hkdf.HKDF(salt, input_key_material, hash=<built\-in function openssl_sha256>)
+Bases: \fBobject\fP
+.sp
+HKDF follows the “extract\-then\-expand” paradigm, where the KDF logically
+consists of two modules.  The first stage takes the input keying material
+and “extracts” from it a fixed\-length pseudorandom key K.  The second stage
+“expands” the key K into several additional pseudorandom keys (the output
+of the KDF).
+.INDENT 7.0
+.TP
+.B expand(info=b”, length=32)
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.ec.hkdf.buffer(x)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.ec.hkdf.decode_hex(s)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.ec.hkdf.hkdf_expand(pseudo_random_key, info=b”, length=32, hash=<built\-in function openssl_sha256>)
+“expands” the pseudorandom key and info to the desired length in bytes; the number and
+lengths of the output keys depend on the specific cryptographic algorithms
+for which the keys are needed.
+.sp
+HKDF\-Expand(PRK, info, L) \-> OKM
+Options:
+.INDENT 7.0
+.INDENT 3.5
+Hash        a hash function; HashLen denotes the length of the hash function output in octets
+.UNINDENT
+.UNINDENT
+.sp
+Inputs:
+PRK           a pseudorandom key of at least HashLen octets (usually, the output from the extract step)
+info  optional context and application specific information
+L             length of output keying material in octets (<= 255*HashLen)
+.INDENT 7.0
+.TP
+.B Output:
+OKM         output keying material (of L octets)
+.UNINDENT
+.sp
+The output OKM is calculated as follows:
+N = ceil(L/HashLen)
+T = T(1) | T(2) | T(3) | … | T(N)
+OKM = first L octets of T
+where:
+T(0) = empty string (zero length)
+T(1) = HMAC\-Hash(PRK, T(0) | info | 0x01)
+T(2) = HMAC\-Hash(PRK, T(1) | info | 0x02)
+T(3) = HMAC\-Hash(PRK, T(2) | info | 0x03)
+…
+(where the constant concatenated to the end of each T(n) is a single octet.)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.ec.hkdf.hkdf_extract(salt, input_key_material, hash=<built\-in function openssl_sha256>)
+The goal of the “extract” stage is to “concentrate” the possibly dispersed
+entropy of the input keying material into a short, but cryptographically
+strong, pseudorandom key.
+.sp
+HKDF\-Extract(salt, IKM) \-> PRK
+Options:
+.INDENT 7.0
+.INDENT 3.5
+Hash        a hash function; HashLen denotes the length of the hash function output in octets
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Inputs:
+salt        optional salt value (a non\-secret random value); if not provided, it is set to a string of HashLen zeros.
+IKM         input keying material
+.TP
+.B Output:
+PRK         a pseudorandom key (of HashLen octets)
+.UNINDENT
+.sp
+The output PRK is calculated as follows:
+PRK = HMAC\-Hash(salt, IKM)
+.UNINDENT
+.SS Module contents
+.SS tudoigual.rsa package
+.SS Submodules
+.SS tudoigual.rsa.rsa module
+.INDENT 0.0
+.TP
+.B class tudoigual.rsa.rsa.RSA_PKC(gen=False, key_in=None, path=’.keys’, pub_in=None, form=’PEM’)
+Bases: \fBobject\fP
+.INDENT 7.0
+.TP
+.B decrypt(ciphertext)
+.INDENT 7.0
+.TP
+.B Parameters
+\fBstring message\fP (\fIbyte\fP) – Ciphertext to be decrypted, an octet string of length k (k denotes the length in octets of the RSA modulus n).
+.TP
+.B Returns
+Message, an octet string of length mLen, where mLen <= k \- 2hLen \- 2.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B encrypt(message, key=None)
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBstring message\fP (\fIbyte\fP) – The message to encrypt, also known as plaintext. It can be of variable
+length, but not longer than the RSA modulus (in bytes) minus 2, minus twice the hash output size.
+.IP \(bu 2
+\fBstring key\fP (\fIbyte\fP) – RSA key.
+.UNINDENT
+.TP
+.B Returns
+A string, the ciphertext in which the message is encrypted. It is as long as the RSA modulus (in bytes).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B gen_rsa_key(key_length=2048, path=’.keys’, form=’PEM’)
+Generate RSA key object with an exponent 65537 in PEM format
+:param int key_length:
+.INDENT 7.0
+.INDENT 3.5
+Key length, or size (in bits) of the RSA modulus. It must be a multiple of 256, and no smaller than 1024.
+Default is 2048 bits.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBout\fP (\fIstring\fP) – Output directory.
+Default .keys.
+.IP \(bu 2
+\fBform\fP (\fIstring\fP) – Specifies the output format.
+Default is PEM.
+.UNINDENT
+.TP
+.B Returns
+Private key and public key (sk,pk)
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B sign(message, hash=<module ‘Crypto.Hash.SHA256’ from ‘/usr/local/lib/python3.6/site\-packages/Crypto/Hash/SHA256.py’>)
+Produce the PKCS#1 v1.5 signature of a message.
+:param byte string message:
+.INDENT 7.0
+.INDENT 3.5
+The message to be signed.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Parameters
+\fBhash\fP (\fIstring\fP) – Cryptographic hash function used to compress the message.
+.TP
+.B Returns
+The signature encoded as an octet string of length k, where k is the length in octets of the RSA modulus n.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B verify(message, signature, hash=<module ‘Crypto.Hash.SHA256’ from ‘/usr/local/lib/python3.6/site\-packages/Crypto/Hash/SHA256.py’>)
+Verify that a certain PKCS#1 v1.5 signature is authentic.
+This function checks if the party holding the private half of the key really signed the message.
+:param byte string message:
+.INDENT 7.0
+.INDENT 3.5
+Message whose signature is to be verified.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBsignature\fP (\fIstring\fP) – The signature that needs to be validated.
+.IP \(bu 2
+\fBhash\fP (\fIstring\fP) – Cryptographic hash function used to compress the message.
+.UNINDENT
+.TP
+.B Returns
+True if the signature is authentic.
+Raises InvalidSignature if the sgnature is not authentic.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.rsa.rsa.import_Key(key_file)
+Import an RSA key (public or private half), encoded in standard form.
+:param string:
+.INDENT 7.0
+.INDENT 3.5
+Path to the RSA key to be imported.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Returns
+An RSA key object.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.rsa.rsa.public_key_from_certificate(cert=None)
+Get public key from certificate.
+.UNINDENT
+.SS Module contents
+.SS tudoigual.utils package
+.SS Submodules
+.SS tudoigual.utils.decorators module
+.sp
+decorators declares some decorators that ensure the object has the
+correct keys declared when need be.
+.INDENT 0.0
+.TP
+.B tudoigual.utils.decorators.requires_private_key(func)
+Decorator for functions that require the private key to be defined.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.decorators.requires_public_key(func)
+Decorator for functions that require the public key to be defined.
+By definition, this includes the private key, as such, it’s enough to use this to effect definition of both public and private key.
+.UNINDENT
+.SS tudoigual.utils.ec_curves module
+.sp
+SEC 2: Recommended Elliptic Curve Domain Parameters
+.INDENT 0.0
+.TP
+.B class tudoigual.utils.ec_curves.EC_curve(p, a, b, g_x, g_y, n, h, fieldSize)
+Bases: \fBobject\fP
+.sp
+Elliptic curve domain parameters over Fp are a sextuple:
+T = (p, a, b, G, n, h)
+consisting of an integer p specifying the finite field Fp,
+two elements a, b E Fp, specifying an elliptic curve E(Fp)
+defined by the equation:
+E : y^2 = x^3 + a * x + b (mod p)
+a base point G = (xG, yG) on E(Fp) , a prime n which is the order of G,
+and an integer h which is the cofactor h = #E(Fp) / n.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.ec_curves.EC_curve_secp192r1 = <tudoigual.utils.ec_curves.EC_curve object>
+Recommended 256\-bit Elliptic Curve Domain Parameters over Fp.
+.sp
+The verifiably random elliptic curve domain parameters over Fp
+secp256r1 are specified by the sextuple T = (p,a, b, G, n, h)
+where the finite field Fp is defined by:
+p = FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFF
+.INDENT 7.0
+.INDENT 3.5
+= 2^(224) * (2^(32) \- 1) + 2^(192) + 2^(96) \-1
+.UNINDENT
+.UNINDENT
+.sp
+The curve E: y^2 = x^3 + ax + b over Fp is defined by:
+a = FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFC
+b = 5AC635D8 AA3A93E7 B3EBBD55 769886BC 651D06B0 CC53B0F6 3BCE3C3E 27D2604B
+E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed:
+S = C49D3608 86E70493 6A6678E1 139D26B7 819F7E90
+The base point G in compressed form is:
+G = 03 6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296
+and in uncompressed form is:
+G = 04 6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296 4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5
+Finally the order n of G and the cofactor are:
+n = FFFFFFFF 00000000 FFFFFFFF FFFFFFFF BCE6FAAD A7179E84 F3B9CAC2 FC632551
+h = 01
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.ec_curves.EC_curve_secp256r1 = <tudoigual.utils.ec_curves.EC_curve object>
+Recommended 521\-bit Elliptic Curve Domain Parameters over Fp
+.sp
+The verifiably random elliptic curve domain parameters over Fp
+secp512r1 are specified by the sextuple T = (p,a, b, G, n, h)
+where the finite field Fp is defined by:
+p = 01FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFF
+.INDENT 7.0
+.INDENT 3.5
+= 2^(521) \- 1
+.UNINDENT
+.UNINDENT
+.sp
+The curve E: y^2 = x^3 + ax + b over Fp is defined by:
+a = 01FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFC
+b = 0051 953EB961 8E1C9A1F 929A21A0 B68540EE A2DA725B 99B315F3
+B8B48991 8EF109E1 56193951 EC7E937B 1652C0BD 3BB1BF07 3573DF88
+3D2C34F1 EF451FD4 6B503F00
+E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed:
+S = D09E8800 291CB853 96CC6717 393284AA A0DA64BA
+The base point G in compressed form is:
+G = 0200C6 858E06B7 0404E9CD 9E3ECB66 2395B442 9C648139 053FB521
+.INDENT 7.0
+.INDENT 3.5
+F828AF60 6B4D3DBA A14B5E77 EFE75928 FE1DC127 A2FFA8DE 3348B3C1
+856A429B F97E7E31 C2E5BD66
+.UNINDENT
+.UNINDENT
+.sp
+and in uncompressed form is:
+G =   04 00C6858E 06B70404 E9CD9E3E CB662395 B4429C64 8139053F
+B521F828 AF606B4D 3DBAA14B 5E77EFE7 5928FE1D C127A2FF A8DE3348
+B3C1856A 429BF97E 7E31C2E5 BD660118 39296A78 9A3BC004 5C8A5FB4
+2C7D1BD9 98F54449 579B4468 17AFBD17 273E662C 97EE7299 5EF42640
+C550B901 3FAD0761 353C7086 A272C240 88BE9476 9FD16650
+.sp
+Finally the order n of G and the cofactor are:
+n = 01FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFA 51868783 BF2F966B 7FCC0148 F709A5D0 3BB5C9B8
+899C47AE BB6FB71E 91386409
+h = 01
+.UNINDENT
+.SS tudoigual.utils.exceptions module
+.sp
+exceptions is responsible for exception handling etc.
+.INDENT 0.0
+.TP
+.B exception tudoigual.utils.exceptions.InvalidHashFunction
+Bases: \fBBaseException\fP
+.sp
+Thrown when select cryptographic hash functions is not correct.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B exception tudoigual.utils.exceptions.InvalidSignature
+Bases: \fBBaseException\fP
+.sp
+Thrown when fails to verify Signature.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B exception tudoigual.utils.exceptions.InvalidSignatureParameter
+Bases: \fBBaseException\fP
+.sp
+Thrown when signature parameters are not in the correct interval.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B exception tudoigual.utils.exceptions.MACError
+Bases: \fBBaseException\fP
+.sp
+Thrown when fails to verify Message Authentication Code.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B exception tudoigual.utils.exceptions.MalformedPublicKey
+Bases: \fBBaseException\fP
+.sp
+The public key is malformed as it does not meet the Legendre symbol criterion. The key might have been tampered with or might have been damaged in transit.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B exception tudoigual.utils.exceptions.RNGError
+Bases: \fBBaseException\fP
+.sp
+Thrown when RNG could not be obtained.
+.UNINDENT
+.SS tudoigual.utils.number_theory module
+.INDENT 0.0
+.TP
+.B tudoigual.utils.number_theory.bit_length(self)
+This function returns the number of bits of self
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.number_theory.eea(value, mod)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.number_theory.egcd(value, mod)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.number_theory.extended_gcd(aa, bb)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.number_theory.modInverse(a, n)
+This function calculates the inverse of a modulo n
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.number_theory.modinv(a, m)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.utils.number_theory.mulinv(value, mod)
+.UNINDENT
+.SS tudoigual.utils.old\-ec_curves module
+.SS tudoigual.utils.primes module
+.sp
+One of the important protocol parameters negotiated by Internet Key
+Exchange (IKE) [RFC\-2409] is the Diffie\-Hellman “group” that will be used for certain cryptographic operations.
+IKE currently defines 4 groups.  These groups are approximately as strong as a symmetric key of 70\-80 bits.
+.sp
+The new Advanced Encryption Standard (AES) cipher [AES], which has more strength, needs stronger groups.
+For the 128\-bit AES we need about a 3200\-bit group [Orman01].
+The 192 and 256\-bit keys would need groups that are about 8000 and 15400 bits respectively.
+Another source [RSA13] [Rousseau00] estimates that the security equivalent key size for the 192\-bit symmetric cipher is 2500 bits instead of 8000 bits, and the equivalent key size 256\-bit symmetric cipher is 4200 bits instead of 15400 bits.
+.sp
+The exponent size used in the Diffie\-Hellman must be selected so that it matches other parts of the system.
+It should not be the weakest link in the security system.
+It should have double the entropy of the strength of the entire system, i.e., if you use a group whose strength is 128 bits, you must use more than 256 bits of randomness in the exponent used in the Diffie\-Hellman calculation.
+.SS Module contents
+.SS tudoigual.x509 package
+.SS Submodules
+.SS tudoigual.x509.ca module
+.sp
+Certificate tool for sysadmins.
+.INDENT 0.0
+.TP
+.B class tudoigual.x509.ca.CertInfo(subject=None, alt_names=None, ca=False, path_length=0, usage=None, load=None, ocsp_urls=None, crl_urls=None, issuer_urls=None, ocsp_nocheck=False, permit_subtrees=None, exclude_subtrees=None)
+Bases: \fBobject\fP
+.sp
+Container for certificate fields.
+.INDENT 7.0
+.TP
+.B extract_gnames(ext)
+Convert list of GeneralNames to list of prefixed strings.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B extract_key_usage(ext)
+Extract list of tags from KeyUsage extension.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B extract_name(name)
+Convert Name object to shortcut\-dict.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B extract_xkey_usage(ext)
+Walk oid list, return keywords.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_crl_gnames()
+Return crl_urls as GeneralNames
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_issuer_urls_gnames()
+Return issuer_urls as GeneralNames
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_name()
+Create Name object from subject DN.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_ocsp_gnames()
+Return ocsp_urls as GeneralNames
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_san_gnames()
+Return SubjectAltNames as GeneralNames
+.UNINDENT
+.INDENT 7.0
+.TP
+.B install_extensions(builder)
+Add common extensions to Cert\- or CSR builder.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B load_from_existing(obj)
+Load certificate info from existing certificate or certificate request.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B load_gnames(gname_list)
+Converts list of prefixed strings to GeneralName list.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B load_name(nmap)
+Create Name object from subject DN.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B show(writeln)
+Print out details.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B show_list(desc, lst, writeln)
+Print out list field.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.as_bytes(s)
+Return byte\-string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.as_unicode(s)
+Return unicode\-string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.cert_to_pem(cert)
+Serialize certificate in PEM format.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.create_x509_cert(privkey, pubkey, subject_info, issuer_info, days)
+Main cert creation code.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.create_x509_req(privkey, subject_info)
+Main CSR creation code.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.die(msg, *args)
+Print message and exit.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.dn_escape(s)
+Distinguishedname backslash\-escape
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.do_output(data, args, cmd)
+Output X509 structure
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.get_backend()
+Returns backend to use.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.info_from_args(args)
+Collect command\-line args
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.key_to_pem(key, password=None)
+Serialize key in PEM format, optionally encrypted.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.list_escape(s)
+Escape value for comma\-separated list
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.load_cert(fn)
+Read CRT file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.load_gpg_file(fn)
+Decrypt file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.load_key(fn, psw=None)
+Read private key, decrypt if needed.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.load_password(fn)
+Read password from potentially gpg\-encrypted file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.load_req(fn)
+Read CSR file.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.loop_escaped(val, c)
+Parse list of strings, separated by c.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.make_key_usage(digital_signature=False, content_commitment=False, key_encipherment=False, data_encipherment=False, key_agreement=False, key_cert_sign=False, crl_sign=False, encipher_only=False, decipher_only=False)
+Default args for KeyUsage.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.maybe_parse(val, parse_func, default)
+Parse argument value with func if string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.msg(msg, *args)
+Print message to stderr.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.msg_show(ln)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.new_ec_key(name=’secp256r1’)
+New Elliptic Curve key
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.new_rsa_key(bits=2048)
+New RSA key.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.newkey_command(args)
+Create new key.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.parse_dn(dnstr)
+Parse openssl\-style /\-separated list to dict.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.parse_list(slist)
+Parse comma\-separated list to strings.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.render_name(name)
+Convert DistinguishedName dict to ‘/’\-separated string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.req_command(args)
+Load args, create CSR.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.req_to_pem(req)
+Serialize certificate request in PEM format.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.same_pubkey(o1, o2)
+Compare public keys.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.show_command(args)
+Dump .crt and .csr files.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.sign_command(args)
+Load args, output cert.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.ca.unescape(s)
+Remove backslash escapes.
+.UNINDENT
+.SS tudoigual.x509.certs module
+.INDENT 0.0
+.TP
+.B tudoigual.x509.certs.csr(key, subject, usage=”, alt_names=”, ocsp_nocheck=”, ocsp_urls=”, crl_urls=”, issuer_urls=”, permit_subtrees=”, exclude_subtrees=”, CA=”, path_length=0, password_file=”, out=”)
+Load args, create CSR.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.certs.new_Key(out, type=’ec’, password_file=”)
+Create new key.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.certs.output(data, cmd, text=”, out=”)
+Output X509 structure
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.x509.certs.sign_csr(csr, days=730, ca_cert=None, ca_key=None, password_file=”, out=’OverHere.pem’)
+Load args, output cert.
+.UNINDENT
+.SS Module contents
+.SS Submodules
+.SS tudoigual.cert_gen module
+.sp
+Certificate generation module.
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.as_bytes(s)
+Return byte\-string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.as_unicode(s)
+Return unicode\-string.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.createCertRequest(pkey, digest=’sha256’, **name)
+Create a certificate request.
+.INDENT 7.0
+.TP
+.B Arguments: pkey   \- The key to associate with the request
+digest \- Digestion method to use for signing, default is sha256
+
+.nf
+**
+.fi
+name \- The name of the subject of the request, possible
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B arguments are:
+C     \- Country name
+ST    \- State or province name
+L     \- Locality name
+O     \- Organization name
+OU    \- Organizational unit name
+CN    \- Common name
+emailAddress \- E\-mail address
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Returns:   The certificate request in an X509Req object
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.createCertificate(req, issuerCertKey, serial, validityPeriod, digest=’sha256’)
+Generate a certificate given a certificate request.
+.INDENT 7.0
+.TP
+.B Arguments: req        \- Certificate request to use
+issuerCert \- The certificate of the issuer
+issuerKey  \- The private key of the issuer
+serial     \- Serial number for the certificate
+notBefore  \- Timestamp (relative to now) when the certificate
+.INDENT 7.0
+.INDENT 3.5
+starts being valid
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B notAfter   \- Timestamp (relative to now) when the certificate
+stops being valid
+.UNINDENT
+.sp
+digest     \- Digest method to use for signing, default is sha256
+.UNINDENT
+.sp
+Returns:   The signed certificate in an X509 object
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.createKeyPair(type, bits)
+Create a public/private key pair.
+.INDENT 7.0
+.TP
+.B Arguments: type \- Key type, must be one of TYPE_RSA and TYPE_DSA
+bits \- Number of bits to use in the key
+.UNINDENT
+.sp
+Returns:   The public/private key pair in a PKey object
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.csr(pk)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.generate_ecdsa_key(key_curve, out)
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.loadCertificate(cert)
+Load a public/private key pair.
+.sp
+Arguments:
+Returns:
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.loadPrivateKey(sk)
+Load a public/private key pair.
+.sp
+Arguments:
+Returns:
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.req_to_pem(req)
+Serialize certificate request in PEM format.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B tudoigual.cert_gen.verify(ca_cert_pem, crl_pem, cert_pem)
+.UNINDENT
+.SS tudoigual.chap module
+.SS Module contents
+.SH INDICES AND TABLES
+.INDENT 0.0
+.IP \(bu 2
+genindex
+.IP \(bu 2
+modindex
+.IP \(bu 2
+search
+.UNINDENT
+.SH COPYRIGHT
+2017, rcoliveira
+.\" Generated by docutils manpage writer.
+.

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.rsa.rsa &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for tudoigual.rsa.rsa</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="k">import</span> <span class="n">PKCS1_OAEP</span>
+<span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="k">import</span> <span class="n">RSA</span>
+<span class="kn">from</span> <span class="nn">Crypto.Signature</span> <span class="k">import</span> <span class="n">PKCS1_v1_5</span>
+<span class="kn">from</span> <span class="nn">Crypto.Hash</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">binascii</span> <span class="k">import</span> <span class="n">a2b_base64</span>
+<span class="kn">from</span> <span class="nn">Crypto.Util.asn1</span> <span class="k">import</span> <span class="n">DerSequence</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<span class="kn">from</span> <span class="nn">tudoigual.utils.exceptions</span> <span class="k">import</span> <span class="n">InvalidSignature</span><span class="p">,</span> <span class="n">InvalidHashFunction</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+
+<div class="viewcode-block" id="public_key_from_certificate"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.public_key_from_certificate">[docs]</a><span class="k">def</span> <span class="nf">public_key_from_certificate</span><span class="p">(</span><span class="n">cert</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Get public key from certificate.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="c1"># Convert from PEM to DER</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">pem</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cert</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+  <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Could not find given certificate.&#39;</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">lines</span> <span class="o">=</span> <span class="n">pem</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+  <span class="n">der</span> <span class="o">=</span> <span class="n">a2b_base64</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+  <span class="c1"># Extract subjectPublicKeyInfo field from X.509 certificate (see RFC3280)</span>
+  <span class="n">cert</span> <span class="o">=</span> <span class="n">DerSequence</span><span class="p">()</span>
+  <span class="n">cert</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">der</span><span class="p">)</span>
+  <span class="n">tbsCertificate</span> <span class="o">=</span> <span class="n">DerSequence</span><span class="p">()</span>
+  <span class="n">tbsCertificate</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">cert</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">subjectPublicKeyInfo</span> <span class="o">=</span> <span class="n">tbsCertificate</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">subjectPublicKeyInfo</span></div>
+
+<span class="k">def</span> <span class="nf">__digest_message</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">hash</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">__hash</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SHA&#39;</span><span class="p">,</span><span class="s1">&#39;SHA224&#39;</span><span class="p">,</span><span class="s1">&#39;SHA256&#39;</span><span class="p">,</span><span class="s1">&#39;SHA512&#39;</span><span class="p">]</span>
+  <span class="k">if</span> <span class="nb">hash</span> <span class="ow">in</span> <span class="n">__hash</span><span class="p">:</span>
+  <span class="c1">#if hash == SHA:</span>
+  <span class="c1">#  digest = hash.new()</span>
+  <span class="c1">#elif hash == SHA224:</span>
+  <span class="c1">#  digest = hash.new()</span>
+  <span class="c1">#elif hash == SHA256:</span>
+  <span class="c1">#  digest = hash.new()</span>
+  <span class="c1">#elif hash == SHA512:</span>
+    <span class="n">digest</span> <span class="o">=</span> <span class="nb">hash</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">InvalidHashFunction</span>
+  <span class="n">digest</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">digest</span>
+
+<div class="viewcode-block" id="import_Key"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.import_Key">[docs]</a><span class="k">def</span> <span class="nf">import_Key</span><span class="p">(</span><span class="n">key_file</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Import an RSA key (public or private half), encoded in standard form.</span>
+<span class="sd">  :param string:</span>
+<span class="sd">    Path to the RSA key to be imported.</span>
+<span class="sd">  :return:</span>
+<span class="sd">    An RSA key object.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">try</span><span class="p">:</span>
+      <span class="n">key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">importKey</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">key_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+  <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="k">pass</span>
+  <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="k">pass</span>
+  <span class="k">return</span> <span class="n">key</span></div>
+
+<div class="viewcode-block" id="RSA_PKC"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.RSA_PKC">[docs]</a><span class="k">class</span> <span class="nc">RSA_PKC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">key_in</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;.keys&#39;</span><span class="p">,</span> <span class="n">pub_in</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">form</span> <span class="o">=</span> <span class="s1">&#39;PEM&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">gen</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gen_rsa_key</span><span class="p">(</span><span class="n">key_length</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">,</span> <span class="n">form</span> <span class="o">=</span> <span class="n">form</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pub_in</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">importKey</span><span class="p">(</span><span class="n">pub_in</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="n">import_Key</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/pk.pem&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="n">key_in</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sk</span> <span class="o">=</span> <span class="n">import_Key</span><span class="p">(</span><span class="n">key_in</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sk</span> <span class="o">=</span> <span class="n">import_Key</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/sk-and-pk.pem&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+<div class="viewcode-block" id="RSA_PKC.gen_rsa_key"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.RSA_PKC.gen_rsa_key">[docs]</a>  <span class="k">def</span> <span class="nf">gen_rsa_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_length</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;.keys&#39;</span><span class="p">,</span> <span class="n">form</span> <span class="o">=</span> <span class="s1">&#39;PEM&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate RSA key object with an exponent 65537 in PEM format</span>
+<span class="sd">    :param int key_length:</span>
+<span class="sd">      Key length, or size (in bits) of the RSA modulus. It must be a multiple of 256, and no smaller than 1024.</span>
+<span class="sd">      Default is 2048 bits.</span>
+<span class="sd">    :param string out:</span>
+<span class="sd">      Output directory.</span>
+<span class="sd">      Default .keys.</span>
+<span class="sd">    :param string form:</span>
+<span class="sd">      Specifies the output format.</span>
+<span class="sd">      Default is PEM.</span>
+<span class="sd">    :return:</span>
+<span class="sd">      Private key and public key (sk,pk)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">key_length</span><span class="p">,</span> <span class="n">randfunc</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">progress_func</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">65537</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Key length is too little or not a multiple of 256.&#39;</span><span class="p">)</span>
+
+    <span class="n">f_sk</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/sk-and-pk.pem&#39;</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+    <span class="n">f_pk</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/pk.pem&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+
+    <span class="n">private_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">exportKey</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;PEM&#39;</span><span class="p">,</span> <span class="n">passphrase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pkcs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">public_key</span>  <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span><span class="o">.</span><span class="n">exportKey</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;PEM&#39;</span><span class="p">,</span> <span class="n">passphrase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pkcs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">f_sk</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+    <span class="n">f_pk</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">public_key</span><span class="p">)</span>
+
+    <span class="n">f_sk</span><span class="o">.</span><span class="n">close</span>
+    <span class="n">f_pk</span><span class="o">.</span><span class="n">close</span>
+    <span class="k">return</span> <span class="n">private_key</span><span class="p">,</span> <span class="n">public_key</span></div>
+
+<div class="viewcode-block" id="RSA_PKC.encrypt"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.RSA_PKC.encrypt">[docs]</a>  <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param byte string message:</span>
+<span class="sd">      The message to encrypt, also known as plaintext. It can be of variable</span>
+<span class="sd">      length, but not longer than the RSA modulus (in bytes) minus 2, minus twice the hash output size.</span>
+<span class="sd">    :param byte string key:</span>
+<span class="sd">      RSA key.</span>
+<span class="sd">    :return:</span>
+<span class="sd">      A string, the ciphertext in which the message is encrypted. It is as long as the RSA modulus (in bytes).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize RSA key</span>
+    <span class="n">rsa_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rsa_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;RSA key needed for encryption.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">PKCS1_OAEP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">rsa_key</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">byte_str</span> <span class="o">=</span> <span class="n">message</span>
+      <span class="c1"># type(byte_str) # ensure it is byte representation</span>
+      <span class="n">ciphertext</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">byte_str</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;RSA key length is not sufficiently long to deal with the given message.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ciphertext</span></div>
+
+<div class="viewcode-block" id="RSA_PKC.decrypt"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.RSA_PKC.decrypt">[docs]</a>  <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param byte string message:</span>
+<span class="sd">      Ciphertext to be decrypted, an octet string of length k (k denotes the length in octets of the RSA modulus n).</span>
+<span class="sd">    :return:</span>
+<span class="sd">      Message, an octet string of length mLen, where mLen &lt;= k - 2hLen - 2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">PKCS1_OAEP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sk</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">message</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ciphertext length is incorrect, or decryption does not succeed.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;RSA key has no private half.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">message</span></div>
+
+<div class="viewcode-block" id="RSA_PKC.sign"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.RSA_PKC.sign">[docs]</a>  <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="nb">hash</span> <span class="o">=</span> <span class="n">SHA256</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Produce the PKCS#1 v1.5 signature of a message.</span>
+<span class="sd">    :param byte string message:</span>
+<span class="sd">      The message to be signed.</span>
+<span class="sd">    :param string hash:</span>
+<span class="sd">      Cryptographic hash function used to compress the message.</span>
+<span class="sd">    :return:</span>
+<span class="sd">      The signature encoded as an octet string of length k, where k is the length in octets of the RSA modulus n.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">digest</span> <span class="o">=</span> <span class="nb">hash</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+      <span class="n">digest</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="c1">#digest_message(message, hash)</span>
+      <span class="n">signer</span> <span class="o">=</span> <span class="n">PKCS1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sk</span><span class="p">)</span>
+      <span class="n">signature</span> <span class="o">=</span> <span class="n">signer</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;RSA key length is not sufficiently long to deal with the given hash algorithm.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;RSA key has no private half.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">InvalidHashFunction</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invalid Hash Function.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">signature</span></div>
+
+<div class="viewcode-block" id="RSA_PKC.verify"><a class="viewcode-back" href="../../../api/tudoigual.rsa.html#tudoigual.rsa.rsa.RSA_PKC.verify">[docs]</a>  <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">signature</span><span class="p">,</span> <span class="nb">hash</span> <span class="o">=</span> <span class="n">SHA256</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verify that a certain PKCS#1 v1.5 signature is authentic.</span>
+<span class="sd">    This function checks if the party holding the private half of the key really signed the message.</span>
+<span class="sd">    :param byte string message:</span>
+<span class="sd">      Message whose signature is to be verified.</span>
+<span class="sd">    :param string signature:</span>
+<span class="sd">      The signature that needs to be validated.</span>
+<span class="sd">    :param string hash:</span>
+<span class="sd">      Cryptographic hash function used to compress the message.</span>
+<span class="sd">    :return:</span>
+<span class="sd">        True if the signature is authentic.</span>
+<span class="sd">        Raises InvalidSignature if the sgnature is not authentic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">digest</span> <span class="o">=</span> <span class="nb">hash</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+      <span class="n">digest</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="c1">#digest_message(message, hash)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">InvalidHashFunction</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invalid Hash Function.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">verifier</span> <span class="o">=</span> <span class="n">PKCS1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verifier</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">digest</span><span class="p">,</span> <span class="n">signature</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="c1">#raise InvalidSignature</span></div></div>
+
+<span class="c1">#if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#  Alice = RSA_PKC(&#39;keys&#39;)</span>
+<span class="c1">#  Bob   = RSA_PKC(&#39;keys/Bob&#39;)</span>
+<span class="c1">#  ciphertext = Alice.encrypt(message = &#39;ola&#39;, cert = &#39;0000_cert.pem&#39;)</span>
+<span class="c1">#  print(ciphertext)</span>
+<span class="c1">#  print(Alice.decrypt(ciphertext))</span>
+<span class="c1">#    # ciphertext = rsa.encrypt(&#39;ola&#39;)</span>
+<span class="c1">#    # print(rsa.decrypt(ciphertext, key=&#39;.keys/sk-and-pk.pem&#39;))</span>
+<span class="c1">## Signatures</span>
+<span class="c1">#  signature = Alice.sign(ciphertext)</span>
+<span class="c1">#  Bob.verify(Alice.pk, ciphertext, signature)</span>
+<span class="c1">#    # signature = rsa.sign(ciphertext, &#39;.keys/sk-and-pk.pem&#39;)</span>
+<span class="c1">#    # rsa.verify(ciphertext, &#39;.keys/test-pk.pem&#39;, signature)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+addr = 127.0.0.1
+port = 8889
+name = alice
+org = ubi
+#repo.1 = test:sync_dir_a
+repo.1 = test:/home/pudds/projects/pync/pync/sync_dir_a

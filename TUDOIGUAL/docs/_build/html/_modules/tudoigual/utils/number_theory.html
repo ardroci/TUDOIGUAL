@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.utils.number_theory &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for tudoigual.utils.number_theory</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+
+<div class="viewcode-block" id="bit_length"><a class="viewcode-back" href="../../../api/tudoigual.utils.html#tudoigual.utils.number_theory.bit_length">[docs]</a><span class="k">def</span> <span class="nf">bit_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;This function returns the number of bits of self&quot;&quot;&quot;</span>
+  <span class="n">s</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>       <span class="c1"># binary representation:  bin(-37) --&gt; &#39;-0b100101&#39;</span>
+  <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-0b&#39;</span><span class="p">)</span> <span class="c1"># remove leading zeros and minus sign</span>
+  <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>       <span class="c1"># len(&#39;100101&#39;) --&gt; 6</span></div>
+
+<span class="c1"># -- Modular Inverse --#</span>
+<div class="viewcode-block" id="modInverse"><a class="viewcode-back" href="../../../api/tudoigual.utils.html#tudoigual.utils.number_theory.modInverse">[docs]</a><span class="k">def</span> <span class="nf">modInverse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;This function calculates the inverse of a modulo n&quot;&quot;&quot;</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">n</span>
+  <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">while</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">:</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">i</span><span class="o">//</span><span class="n">a</span> <span class="c1"># changed / to // for python3 compability</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">x</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">d</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="n">t</span><span class="o">*</span><span class="n">x</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="n">v</span> <span class="o">%=</span> <span class="n">n</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span>
+      <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span><span class="o">+</span><span class="n">n</span><span class="p">)</span><span class="o">%</span><span class="n">n</span>
+  <span class="k">return</span> <span class="n">v</span></div>
+<span class="c1">#----------------------#</span>
+
+
+<span class="c1"># -- Modular Inverse --#</span>
+<div class="viewcode-block" id="egcd"><a class="viewcode-back" href="../../../api/tudoigual.utils.html#tudoigual.utils.number_theory.egcd">[docs]</a><span class="k">def</span> <span class="nf">egcd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">mod</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">egcd</span><span class="p">(</span><span class="n">mod</span> <span class="o">%</span> <span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">g</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="p">(</span><span class="n">mod</span> <span class="o">//</span> <span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="mulinv"><a class="viewcode-back" href="../../../api/tudoigual.utils.html#tudoigual.utils.number_theory.mulinv">[docs]</a><span class="k">def</span> <span class="nf">mulinv</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">egcd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">mod</span></div>
+
+<span class="c1"># returns the inverse of a value mod &#39;mod&#39;</span>
+<span class="c1"># example: eea(7,40) returns the inverse of : 7 mod 40; which is 23.</span>
+<div class="viewcode-block" id="eea"><a class="viewcode-back" href="../../../api/tudoigual.utils.html#tudoigual.utils.number_theory.eea">[docs]</a><span class="k">def</span> <span class="nf">eea</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">mulinv</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span></div>
+<span class="c1">#----------------------#</span>
+
+<span class="c1"># -- Modular Inverse --#</span>
+<div class="viewcode-block" id="extended_gcd"><a class="viewcode-back" href="../../../api/tudoigual.utils.html#tudoigual.utils.number_theory.extended_gcd">[docs]</a><span class="k">def</span> <span class="nf">extended_gcd</span><span class="p">(</span><span class="n">aa</span><span class="p">,</span> <span class="n">bb</span><span class="p">):</span>
+    <span class="n">lastremainder</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">aa</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">lastx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lasty</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">remainder</span><span class="p">:</span>
+        <span class="n">lastremainder</span><span class="p">,</span> <span class="p">(</span><span class="n">quotient</span><span class="p">,</span> <span class="n">remainder</span><span class="p">)</span> <span class="o">=</span> <span class="n">remainder</span><span class="p">,</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">lastremainder</span><span class="p">,</span> <span class="n">remainder</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">lastx</span> <span class="o">=</span> <span class="n">lastx</span> <span class="o">-</span> <span class="n">quotient</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">lasty</span> <span class="o">=</span> <span class="n">lasty</span> <span class="o">-</span> <span class="n">quotient</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span>
+    <span class="k">return</span> <span class="n">lastremainder</span><span class="p">,</span> <span class="n">lastx</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">aa</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">),</span> <span class="n">lasty</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">bb</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="modinv"><a class="viewcode-back" href="../../../api/tudoigual.utils.html#tudoigual.utils.number_theory.modinv">[docs]</a><span class="k">def</span> <span class="nf">modinv</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+  <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">extended_gcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">g</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">m</span></div>
+
+<span class="c1">#----------------------#</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.cert_gen &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for tudoigual.cert_gen</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: latin-1 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) AB Strakt</span>
+<span class="c1"># Copyright (C) Jean-Paul Calderone</span>
+<span class="c1"># See LICENSE for details.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Certificate generation module.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.backends</span> <span class="k">import</span> <span class="n">default_backend</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives</span> <span class="k">import</span> <span class="n">hashes</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.asymmetric</span> <span class="k">import</span> <span class="n">rsa</span><span class="p">,</span> <span class="n">ec</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.serialization</span> <span class="k">import</span> <span class="n">Encoding</span><span class="p">,</span> <span class="n">PrivateFormat</span><span class="p">,</span> <span class="n">NoEncryption</span><span class="p">,</span> <span class="n">load_pem_private_key</span>
+<span class="kn">import</span> <span class="nn">OpenSSL</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">cryptography</span> <span class="k">import</span> <span class="n">x509</span>
+<span class="kn">from</span> <span class="nn">cryptography.x509.oid</span> <span class="k">import</span> <span class="n">NameOID</span>
+
+
+<span class="kn">from</span> <span class="nn">OpenSSL</span> <span class="k">import</span> <span class="n">crypto</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="n">TYPE_RSA</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">TYPE_RSA</span>
+<span class="n">TYPE_DSA</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">TYPE_DSA</span>
+
+<span class="c1"># -*- Elliptic Curve -*- #</span>
+<div class="viewcode-block" id="generate_ecdsa_key"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.generate_ecdsa_key">[docs]</a><span class="k">def</span> <span class="nf">generate_ecdsa_key</span><span class="p">(</span><span class="n">key_curve</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
+    <span class="n">key_curve</span> <span class="o">=</span> <span class="n">key_curve</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;secp256r1&#39;</span> <span class="o">==</span> <span class="n">key_curve</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">SECP256R1</span><span class="p">(),</span> <span class="n">default_backend</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;secp384r1&#39;</span> <span class="o">==</span> <span class="n">key_curve</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">SECP384R1</span><span class="p">(),</span> <span class="n">default_backend</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;secp521r1&#39;</span> <span class="o">==</span> <span class="n">key_curve</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">SECP521R1</span><span class="p">(),</span> <span class="n">default_backend</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unsupported key curve: &#39;</span><span class="p">,</span> <span class="n">key_curve</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+<span class="c1">#        return OpenSSL.crypto.PKey.from_cryptography_key(key)  # currently not supported</span>
+    <span class="n">key_pem</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">private_bytes</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="n">Encoding</span><span class="o">.</span><span class="n">PEM</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">PrivateFormat</span><span class="o">.</span><span class="n">PKCS8</span><span class="p">,</span> <span class="n">encryption_algorithm</span><span class="o">=</span><span class="n">NoEncryption</span><span class="p">())</span>
+    <span class="c1"># sys.stdout.write(as_unicode(key_pem))</span>
+    <span class="c1"># sys.stdout.flush()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">as_bytes</span><span class="p">(</span><span class="n">key_pem</span><span class="p">))</span></div>
+    <span class="c1">#return OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, key_pem)</span>
+
+<span class="c1"># def do_output(data, args, cmd):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Output X509 structure</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     if args.text:</span>
+<span class="c1">#         cmd = [&#39;openssl&#39;, cmd, &#39;-text&#39;]</span>
+<span class="c1">#         if args.out:</span>
+<span class="c1">#             cmd.extend([&#39;-out&#39;, args.out])</span>
+<span class="c1">#         p = subprocess.Popen(cmd, stdin=subprocess.PIPE)</span>
+<span class="c1">#         p.communicate(data)</span>
+<span class="c1">#     elif args.out:</span>
+<span class="c1">#         with open(args.out, &#39;wb&#39;) as f:</span>
+<span class="c1">#             f.write(as_bytes(data))</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         sys.stdout.write(as_unicode(data))</span>
+<span class="c1">#         sys.stdout.flush()</span>
+
+<div class="viewcode-block" id="as_unicode"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.as_unicode">[docs]</a><span class="k">def</span> <span class="nf">as_unicode</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Return unicode-string.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">s</span>
+  <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="as_bytes"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.as_bytes">[docs]</a><span class="k">def</span> <span class="nf">as_bytes</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Return byte-string.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">s</span></div>
+
+
+
+<div class="viewcode-block" id="csr"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.csr">[docs]</a><span class="k">def</span> <span class="nf">csr</span><span class="p">(</span><span class="n">pk</span><span class="p">):</span>
+  <span class="n">private_key</span> <span class="o">=</span> <span class="n">load_pem_private_key</span><span class="p">(</span><span class="n">pk</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">default_backend</span><span class="p">())</span>
+  <span class="n">builder</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">CertificateSigningRequestBuilder</span><span class="p">()</span>
+  <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">subject_name</span><span class="p">(</span><span class="n">x509</span><span class="o">.</span><span class="n">Name</span><span class="p">([</span>
+      <span class="n">x509</span><span class="o">.</span><span class="n">NameAttribute</span><span class="p">(</span><span class="n">NameOID</span><span class="o">.</span><span class="n">COMMON_NAME</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;PELO_MENOS_ISTO&#39;</span><span class="p">),</span>
+  <span class="p">]))</span>
+  <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span>
+      <span class="n">x509</span><span class="o">.</span><span class="n">BasicConstraints</span><span class="p">(</span><span class="n">ca</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_length</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span> <span class="n">critical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+  <span class="p">)</span>
+
+  <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">KeyUsage</span><span class="p">(</span><span class="n">digital_signature</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">content_commitment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">key_encipherment</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">data_encipherment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">key_agreement</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">key_cert_sign</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">crl_sign</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">encipher_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">decipher_only</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+  <span class="c1"># ku_args[&#39;digital_signature&#39;] = True</span>
+  <span class="c1"># ku_args[&#39;key_encipherment&#39;] = True</span>
+  <span class="c1"># ext = make_key_usage(**ku_args)</span>
+  <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+  <span class="n">request</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span>
+      <span class="n">private_key</span><span class="p">,</span> <span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">default_backend</span><span class="p">()</span>
+  <span class="p">)</span>
+  <span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">x509</span><span class="o">.</span><span class="n">CertificateSigningRequest</span><span class="p">)):</span>
+    <span class="k">return</span> <span class="n">request</span></div>
+
+
+<div class="viewcode-block" id="req_to_pem"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.req_to_pem">[docs]</a><span class="k">def</span> <span class="nf">req_to_pem</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Serialize certificate request in PEM format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">req</span><span class="o">.</span><span class="n">public_bytes</span><span class="p">(</span><span class="n">Encoding</span><span class="o">.</span><span class="n">PEM</span><span class="p">)</span></div>
+
+
+
+
+
+
+
+<div class="viewcode-block" id="createKeyPair"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.createKeyPair">[docs]</a><span class="k">def</span> <span class="nf">createKeyPair</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">bits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a public/private key pair.</span>
+
+<span class="sd">    Arguments: type - Key type, must be one of TYPE_RSA and TYPE_DSA</span>
+<span class="sd">               bits - Number of bits to use in the key</span>
+<span class="sd">    Returns:   The public/private key pair in a PKey object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pkey</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">PKey</span><span class="p">()</span>
+    <span class="n">pkey</span><span class="o">.</span><span class="n">generate_key</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">bits</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pkey</span></div>
+
+<div class="viewcode-block" id="loadPrivateKey"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.loadPrivateKey">[docs]</a><span class="k">def</span> <span class="nf">loadPrivateKey</span><span class="p">(</span><span class="n">sk</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Load a public/private key pair.</span>
+
+<span class="sd">  Arguments:</span>
+<span class="sd">  Returns:</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sk</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+      <span class="n">private_key</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">load_privatekey</span><span class="p">(</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+  <span class="k">return</span> <span class="n">private_key</span></div>
+
+<div class="viewcode-block" id="loadCertificate"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.loadCertificate">[docs]</a><span class="k">def</span> <span class="nf">loadCertificate</span><span class="p">(</span><span class="n">cert</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Load a public/private key pair.</span>
+
+<span class="sd">  Arguments:</span>
+<span class="sd">  Returns:</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cert</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+      <span class="n">private_key</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">load_certificate</span><span class="p">(</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+  <span class="k">return</span> <span class="n">private_key</span></div>
+
+<div class="viewcode-block" id="createCertRequest"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.createCertRequest">[docs]</a><span class="k">def</span> <span class="nf">createCertRequest</span><span class="p">(</span><span class="n">pkey</span><span class="p">,</span> <span class="n">digest</span><span class="o">=</span><span class="s2">&quot;sha256&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a certificate request.</span>
+
+<span class="sd">    Arguments: pkey   - The key to associate with the request</span>
+<span class="sd">               digest - Digestion method to use for signing, default is sha256</span>
+<span class="sd">               **name - The name of the subject of the request, possible</span>
+<span class="sd">                        arguments are:</span>
+<span class="sd">                          C     - Country name</span>
+<span class="sd">                          ST    - State or province name</span>
+<span class="sd">                          L     - Locality name</span>
+<span class="sd">                          O     - Organization name</span>
+<span class="sd">                          OU    - Organizational unit name</span>
+<span class="sd">                          CN    - Common name</span>
+<span class="sd">                          emailAddress - E-mail address</span>
+<span class="sd">    Returns:   The certificate request in an X509Req object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">X509Req</span><span class="p">()</span>
+    <span class="n">subj</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">get_subject</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">subj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="n">req</span><span class="o">.</span><span class="n">set_pubkey</span><span class="p">(</span><span class="n">pkey</span><span class="p">)</span>
+    <span class="n">req</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">pkey</span><span class="p">,</span> <span class="n">digest</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">req</span></div>
+
+
+<div class="viewcode-block" id="createCertificate"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.createCertificate">[docs]</a><span class="k">def</span> <span class="nf">createCertificate</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">issuerCertKey</span><span class="p">,</span> <span class="n">serial</span><span class="p">,</span> <span class="n">validityPeriod</span><span class="p">,</span>
+                      <span class="n">digest</span><span class="o">=</span><span class="s2">&quot;sha256&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a certificate given a certificate request.</span>
+
+<span class="sd">    Arguments: req        - Certificate request to use</span>
+<span class="sd">               issuerCert - The certificate of the issuer</span>
+<span class="sd">               issuerKey  - The private key of the issuer</span>
+<span class="sd">               serial     - Serial number for the certificate</span>
+<span class="sd">               notBefore  - Timestamp (relative to now) when the certificate</span>
+<span class="sd">                            starts being valid</span>
+<span class="sd">               notAfter   - Timestamp (relative to now) when the certificate</span>
+<span class="sd">                            stops being valid</span>
+<span class="sd">               digest     - Digest method to use for signing, default is sha256</span>
+<span class="sd">    Returns:   The signed certificate in an X509 object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">issuerCert</span><span class="p">,</span> <span class="n">issuerKey</span> <span class="o">=</span> <span class="n">issuerCertKey</span>
+    <span class="n">notBefore</span><span class="p">,</span> <span class="n">notAfter</span> <span class="o">=</span> <span class="n">validityPeriod</span>
+    <span class="n">cert</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">X509</span><span class="p">()</span>
+    <span class="n">cert</span><span class="o">.</span><span class="n">set_serial_number</span><span class="p">(</span><span class="n">serial</span><span class="p">)</span>
+    <span class="n">cert</span><span class="o">.</span><span class="n">gmtime_adj_notBefore</span><span class="p">(</span><span class="n">notBefore</span><span class="p">)</span>
+    <span class="n">cert</span><span class="o">.</span><span class="n">gmtime_adj_notAfter</span><span class="p">(</span><span class="n">notAfter</span><span class="p">)</span>
+    <span class="n">cert</span><span class="o">.</span><span class="n">set_issuer</span><span class="p">(</span><span class="n">issuerCert</span><span class="o">.</span><span class="n">get_subject</span><span class="p">())</span>
+    <span class="n">cert</span><span class="o">.</span><span class="n">set_subject</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">get_subject</span><span class="p">())</span>
+    <span class="n">cert</span><span class="o">.</span><span class="n">set_pubkey</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">get_pubkey</span><span class="p">())</span>
+    <span class="n">cert</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">issuerKey</span><span class="p">,</span> <span class="n">digest</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cert</span></div>
+
+<span class="c1"># https://github.com/pyca/pyopenssl/issues/256</span>
+<div class="viewcode-block" id="verify"><a class="viewcode-back" href="../../api/tudoigual.html#tudoigual.cert_gen.verify">[docs]</a><span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="n">ca_cert_pem</span><span class="p">,</span> <span class="n">crl_pem</span><span class="p">,</span> <span class="n">cert_pem</span><span class="p">):</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">X509Store</span><span class="p">()</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">add_cert</span><span class="p">(</span><span class="n">crypto</span><span class="o">.</span><span class="n">load_certificate</span><span class="p">(</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span> <span class="n">ca_cert_pem</span><span class="p">))</span>
+    <span class="n">cert</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">load_certificate</span><span class="p">(</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span> <span class="n">cert_pem</span><span class="p">)</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">X509StoreContext</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">cert</span><span class="p">)</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">verify_certificate</span><span class="p">()</span>
+
+    <span class="c1"># Until `X509StoreContext` accepts CRLs</span>
+    <span class="n">crl</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">load_crl</span><span class="p">(</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span> <span class="n">crl_pem</span><span class="p">)</span>
+    <span class="n">revoked</span> <span class="o">=</span> <span class="n">crl</span><span class="o">.</span><span class="n">get_revoked</span><span class="p">()</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">revoked</span><span class="p">:</span>
+        <span class="n">r_serial</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get_serial</span><span class="p">()</span>
+        <span class="n">c_serial</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cert</span><span class="o">.</span><span class="n">get_serial_number</span><span class="p">(),)</span>
+        <span class="k">if</span> <span class="n">r_serial</span> <span class="o">==</span> <span class="n">c_serial</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Certificate revoked&quot;</span><span class="p">)</span></div>
+
+
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

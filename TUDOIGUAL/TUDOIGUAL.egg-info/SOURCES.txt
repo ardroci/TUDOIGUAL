@@ -1,0 +1,11 @@
+README.rst
+setup.cfg
+setup.py
+TUDOIGUAL.egg-info/PKG-INFO
+TUDOIGUAL.egg-info/SOURCES.txt
+TUDOIGUAL.egg-info/dependency_links.txt
+TUDOIGUAL.egg-info/not-zip-safe
+TUDOIGUAL.egg-info/top_level.txt
+tudoigual/__init__.py
+tudoigual/gen_cert.py
+tudoigual/skeleton.py

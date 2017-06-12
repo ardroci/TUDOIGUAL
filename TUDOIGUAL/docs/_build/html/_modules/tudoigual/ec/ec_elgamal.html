@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.ec.ec_elgamal &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for tudoigual.ec.ec_elgamal</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">codecs</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">binascii</span> <span class="k">import</span> <span class="n">hexlify</span><span class="p">,</span> <span class="n">unhexlify</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">tudoigual.ec.gen</span> <span class="k">import</span> <span class="n">ECPoint</span><span class="p">,</span> <span class="n">modInverse</span><span class="p">,</span> <span class="n">bit_length</span>
+<span class="kn">from</span> <span class="nn">tudoigual.ec.hkdf</span> <span class="k">import</span> <span class="n">hkdf_extract</span><span class="p">,</span> <span class="n">hkdf_expand</span><span class="p">,</span> <span class="n">HKDF</span>
+<span class="kn">from</span> <span class="nn">tudoigual.ciphers.AES</span> <span class="k">import</span> <span class="n">AES_Cipher</span>
+<span class="kn">from</span> <span class="nn">tudoigual.utils.ec_curves</span> <span class="k">import</span> <span class="n">EC_curve_secp192r1</span><span class="p">,</span> <span class="n">EC_curve_secp256r1</span>
+<span class="kn">from</span> <span class="nn">tudoigual.utils.exceptions</span> <span class="k">import</span> <span class="n">MACError</span><span class="p">,</span> <span class="n">InvalidSignatureParameter</span><span class="p">,</span> <span class="n">InvalidSignature</span>
+
+
+<span class="kn">from</span> <span class="nn">tudoigual.x509.ca</span> <span class="k">import</span> <span class="p">(</span><span class="n">do_output</span><span class="p">,</span> <span class="n">new_ec_key</span><span class="p">,</span> <span class="n">load_password</span><span class="p">,</span> <span class="n">key_to_pem</span><span class="p">,</span> <span class="n">as_unicode</span><span class="p">,</span>
+                <span class="n">as_bytes</span><span class="p">,</span> <span class="n">CertInfo</span><span class="p">,</span> <span class="n">parse_dn</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="n">load_key</span><span class="p">,</span><span class="n">create_x509_req</span><span class="p">,</span>
+                <span class="n">req_to_pem</span><span class="p">,</span> <span class="n">load_cert</span><span class="p">,</span><span class="n">load_req</span><span class="p">,</span> <span class="n">ec</span><span class="p">,</span> <span class="n">EC_CURVES</span><span class="p">,</span> <span class="n">same_pubkey</span><span class="p">,</span>
+                <span class="n">create_x509_cert</span><span class="p">,</span> <span class="n">cert_to_pem</span><span class="p">,</span> <span class="n">new_rsa_key</span><span class="p">,</span> <span class="n">rsa</span><span class="p">,</span> <span class="n">MIN_RSA_BITS</span><span class="p">,</span> <span class="n">MAX_RSA_BITS</span><span class="p">)</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+
+
+<div class="viewcode-block" id="EC_ElGamal"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.ec_elgamal.EC_ElGamal">[docs]</a><span class="k">class</span> <span class="nc">EC_ElGamal</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ec</span> <span class="o">=</span> <span class="n">EC_curve_secp256r1</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cert</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">password_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ec</span> <span class="o">=</span> <span class="n">ec</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cert</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">sk</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_keys</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_sk</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pk</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_keys</span><span class="p">()</span>
+      <span class="n">sk</span> <span class="o">=</span> <span class="n">load_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">load_password</span><span class="p">(</span><span class="n">password_file</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">sk</span> <span class="o">=</span>  <span class="n">sk</span><span class="o">.</span><span class="n">private_numbers</span><span class="p">()</span><span class="o">.</span><span class="n">_private_value</span>
+      <span class="c1"># The public key associated with the certificate.</span>
+      <span class="n">pkey</span> <span class="o">=</span>  <span class="n">load_cert</span><span class="p">(</span><span class="n">cert</span><span class="p">)</span><span class="o">.</span><span class="n">public_key</span><span class="p">()</span>
+      <span class="c1"># Allows serialization of the key to bytes. Encodes an elliptic curve point to a byte string as described in SEC 1 v2.0 section 2.3.3.</span>
+      <span class="c1"># This method only supports uncompressed points.</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="n">pkey</span><span class="o">.</span><span class="n">public_numbers</span><span class="p">()</span><span class="o">.</span><span class="n">encode_point</span><span class="p">()</span>
+
+<div class="viewcode-block" id="EC_ElGamal.gen_keys"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.ec_elgamal.EC_ElGamal.gen_keys">[docs]</a>  <span class="k">def</span> <span class="nf">gen_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">ECPoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">ec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="p">)</span>
+    <span class="c1"># gerar numero aleatorio da</span>
+    <span class="n">nr_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">fieldSize</span><span class="o">//</span><span class="mi">8</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="n">nr_bytes</span><span class="p">)</span>
+    <span class="n">dA</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">byteorder</span> <span class="o">=</span> <span class="s1">&#39;big&#39;</span><span class="p">,</span> <span class="n">signed</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">dA</span> <span class="o">&gt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invalid private key&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># calcular X = da * G</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">multiplyPointByScalar</span><span class="p">(</span><span class="n">dA</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dA</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">G</span></div>
+
+<div class="viewcode-block" id="EC_ElGamal.encrypt"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.ec_elgamal.EC_ElGamal.encrypt">[docs]</a>  <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ECIES</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 1.Escolhe um número aleatório dB em {1,...,n − 1} e calcula Y = (x2,y2) = dB*G;</span>
+    <span class="c1">#secret key</span>
+    <span class="n">nr_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">fieldSize</span><span class="o">//</span><span class="mi">8</span>
+    <span class="n">dB</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="n">nr_bytes</span><span class="p">),</span> <span class="n">byteorder</span> <span class="o">=</span> <span class="s1">&#39;big&#39;</span><span class="p">,</span> <span class="n">signed</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Y=xP as public key.</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span><span class="o">.</span><span class="n">multiplyPointByScalar</span><span class="p">(</span><span class="n">dB</span><span class="p">)</span>
+    <span class="c1"># 2.Calcula também K = (x3,y3) = dB*X – o segredo S entre os dois passa a ser x3;</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pkB</span><span class="p">)</span><span class="o">.</span><span class="n">multiplyPointByScalar</span><span class="p">(</span><span class="n">dB</span><span class="p">)</span>
+    <span class="c1"># 3. Calcula k1 = H(X, x3) e cifra a mensagem com esta chave, i.e., c ← E(k1, m);</span>
+    <span class="c1"># Ideally, the salt value is a random (or pseudorandom) string of the length HashLen.</span>
+    <span class="n">_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span>
+    <span class="n">_hash_len</span> <span class="o">=</span> <span class="n">_hash</span><span class="p">()</span><span class="o">.</span><span class="n">digest_size</span>
+    <span class="n">salt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="n">_hash_len</span><span class="p">)</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">HKDF</span><span class="p">(</span><span class="n">salt</span> <span class="o">=</span> <span class="n">salt</span><span class="p">,</span> <span class="n">input_key_material</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="nb">hash</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">info</span>  <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">k2</span> <span class="o">=</span> <span class="n">HKDF</span><span class="p">(</span><span class="n">salt</span> <span class="o">=</span> <span class="n">salt</span><span class="p">,</span> <span class="n">input_key_material</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="nb">hash</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">info</span>  <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">AES_Cipher</span><span class="p">()</span>
+    <span class="n">iv</span><span class="p">,</span> <span class="n">ciphertext</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">k1</span> <span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="s1">&#39;PKCS7&#39;</span><span class="p">)</span>
+    <span class="c1"># 4. Devolve(Y, iv, c).</span>
+    <span class="c1"># 5. Calcula o MAC(k2, c)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">k2</span><span class="p">,</span> <span class="n">iv</span> <span class="o">+</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">_hash</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    <span class="c1"># 6. Envia para o Bob (Y,iv,c,salt,tag)</span>
+    <span class="k">return</span> <span class="n">Y</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">tag</span></div>
+
+<div class="viewcode-block" id="EC_ElGamal.set_pkB"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.ec_elgamal.EC_ElGamal.set_pkB">[docs]</a>  <span class="k">def</span> <span class="nf">set_pkB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pkB</span> <span class="o">=</span> <span class="n">ECPoint</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EC_ElGamal.decrypt"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.ec_elgamal.EC_ElGamal.decrypt">[docs]</a>  <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># O algoritmo de decifra D(sk,(Y,c,t)) atua da seguinte forma:</span>
+    <span class="c1">#1. Deriva o ponto comum K = (x3,y3) = Y * X – o segredo S entre os dois passa a ser x3;</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">K</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">multiplyPointByScalar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sk</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Excepting and integer.&#39;</span><span class="p">)</span>
+    <span class="c1">#2. Usa a função KDF para derivar duas chaves k1 e k2, uma para decifrar, outra para verificar o MAC;</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">HKDF</span><span class="p">(</span><span class="n">salt</span> <span class="o">=</span> <span class="n">salt</span><span class="p">,</span> <span class="n">input_key_material</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="nb">hash</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">info</span>  <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">k2</span> <span class="o">=</span> <span class="n">HKDF</span><span class="p">(</span><span class="n">salt</span> <span class="o">=</span> <span class="n">salt</span><span class="p">,</span> <span class="n">input_key_material</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="nb">hash</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">info</span>  <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+
+    <span class="c1">#3. Verifica o MAC e debita falha se t&#39; !=g MAC(k2, c);</span>
+    <span class="n">tag1</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">k2</span><span class="p">,</span> <span class="n">iv</span> <span class="o">+</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">hmac</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">tag1</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="n">MACError</span>
+    <span class="c1">#4. Decifra m a partir de c e usando k1, i.e., m = D(k1,c).</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">AES_Cipher</span><span class="p">()</span>
+    <span class="n">plaintext</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">k1</span><span class="p">,</span> <span class="n">iv</span> <span class="o">=</span> <span class="n">iv</span><span class="p">,</span> <span class="n">pad</span> <span class="o">=</span> <span class="s1">&#39;PKCS7&#39;</span><span class="p">)</span>
+    <span class="c1">#5. Devolve m.</span>
+    <span class="k">return</span> <span class="n">plaintext</span></div>
+
+<div class="viewcode-block" id="EC_ElGamal.sign"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.ec_elgamal.EC_ElGamal.sign">[docs]</a>  <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sk</span> <span class="p">,</span> <span class="nb">hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">G</span> <span class="o">=</span> <span class="n">ECPoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">ec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="p">)</span>
+      <span class="n">nr_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">fieldSize</span><span class="o">//</span><span class="mi">8</span>
+      <span class="c1"># 1. Select a random or pseudorandom integer k, k ∈ [1, n - 1]</span>
+      <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="n">nr_bytes</span><span class="p">),</span> <span class="n">byteorder</span> <span class="o">=</span> <span class="s1">&#39;big&#39;</span><span class="p">,</span> <span class="n">signed</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+          <span class="k">raise</span> <span class="n">InvalidSignatureParameter</span>
+      <span class="c1"># 2. Compute point P = (x, y) = kG and r = x mod n.</span>
+      <span class="n">P</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">multiplyPointByScalar</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+      <span class="n">r</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">x</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span>
+      <span class="c1"># If r = 0 then goto step 1</span>
+      <span class="k">if</span> <span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;r = 0&#39;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="c1"># 4. Compute e = H(m), where H is a one way hash function, which produces a n-bit hash value</span>
+      <span class="nb">hash</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+      <span class="n">e</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">hash</span><span class="p">()</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span>
+      <span class="c1"># 5. Compute s = k^(-1) * (e + sk * r) mod n.</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">modInverse</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">e</span> <span class="o">+</span> <span class="p">(</span><span class="n">sk</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span>
+      <span class="c1"># If s = O then goto step 1</span>
+      <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;s = 0&#39;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="c1"># 6. The signature of message m is the pair (r, s).</span>
+    <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Excepting an integer value.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">InvalidSignatureParameter</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invalid signature parameter k.&#39;</span><span class="p">)</span>
+      <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="EC_ElGamal.verify_signature"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.ec_elgamal.EC_ElGamal.verify_signature">[docs]</a>  <span class="k">def</span> <span class="nf">verify_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">pk</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>  <span class="nb">hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 1. Verify that r and s are integers in the range 1 through n - 1</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="n">InvalidSignatureParameter</span> <span class="c1">#REJECT SIGNATURE</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">ECPoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">ec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="p">)</span>
+    <span class="c1"># 2. Using a one way hash function, compute the n-bit hash value e = H(m)</span>
+    <span class="nb">hash</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">hash</span><span class="p">()</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="c1"># 3. Compute w = s-1 mod n</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">modInverse</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+    <span class="c1"># 4. Compute u1 = e*w and u2 = r*w</span>
+    <span class="n">u_1</span><span class="p">,</span> <span class="n">u_2</span> <span class="o">=</span> <span class="n">e</span> <span class="o">*</span> <span class="n">w</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span> <span class="n">w</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span>
+    <span class="c1"># 5. Compute the point X = (x1, y1) = u1 * G + u2 * pk</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">multiplyPointByScalar</span><span class="p">(</span><span class="n">u_1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pk</span><span class="o">.</span><span class="n">multiplyPointByScalar</span><span class="p">(</span><span class="n">u_2</span><span class="p">))</span>
+    <span class="c1"># 6. If X = O, reject the signature else compute v = x1 mod n</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="n">InvalidSignature</span> <span class="c1">#REJECT SIGNATURE</span>
+    <span class="c1"># else compute v = x1 mod n</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">x</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ec</span><span class="o">.</span><span class="n">n</span>
+    <span class="c1"># 7. Accept signature if and only if v = r</span>
+    <span class="n">r_digest</span><span class="p">,</span> <span class="n">v_digest</span><span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;sha256&#39;</span><span class="p">),</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;sha256&#39;</span><span class="p">)</span>
+    <span class="n">r_digest</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">v_digest</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">hmac</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">v_digest</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="n">r_digest</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()):</span>
+      <span class="k">return</span> <span class="kc">True</span>  <span class="c1">#ACCEPT SIGNATURE</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">InvalidSignature</span> <span class="c1">#REJECT SIGNATURE</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

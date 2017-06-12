@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.x509 package &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="tudoigual.utils package" href="tudoigual.utils.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">tudoigual.x509 package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-tudoigual.x509.ca">tudoigual.x509.ca module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.x509.certs">tudoigual.x509.certs module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="tudoigual.utils.html" title="Previous Chapter: tudoigual.utils package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; tudoigual.uti...</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/tudoigual.x509.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="tudoigual-x509-package">
+<h1>tudoigual.x509 package<a class="headerlink" href="#tudoigual-x509-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tudoigual.x509.ca">
+<span id="tudoigual-x509-ca-module"></span><h2>tudoigual.x509.ca module<a class="headerlink" href="#module-tudoigual.x509.ca" title="Permalink to this headline">¶</a></h2>
+<p>Certificate tool for sysadmins.</p>
+<dl class="class">
+<dt id="tudoigual.x509.ca.CertInfo">
+<em class="property">class </em><code class="descclassname">tudoigual.x509.ca.</code><code class="descname">CertInfo</code><span class="sig-paren">(</span><em>subject=None</em>, <em>alt_names=None</em>, <em>ca=False</em>, <em>path_length=0</em>, <em>usage=None</em>, <em>load=None</em>, <em>ocsp_urls=None</em>, <em>crl_urls=None</em>, <em>issuer_urls=None</em>, <em>ocsp_nocheck=False</em>, <em>permit_subtrees=None</em>, <em>exclude_subtrees=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Container for certificate fields.</p>
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.extract_gnames">
+<code class="descname">extract_gnames</code><span class="sig-paren">(</span><em>ext</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.extract_gnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.extract_gnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert list of GeneralNames to list of prefixed strings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.extract_key_usage">
+<code class="descname">extract_key_usage</code><span class="sig-paren">(</span><em>ext</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.extract_key_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.extract_key_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract list of tags from KeyUsage extension.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.extract_name">
+<code class="descname">extract_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.extract_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.extract_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Name object to shortcut-dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.extract_xkey_usage">
+<code class="descname">extract_xkey_usage</code><span class="sig-paren">(</span><em>ext</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.extract_xkey_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.extract_xkey_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Walk oid list, return keywords.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.get_crl_gnames">
+<code class="descname">get_crl_gnames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.get_crl_gnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.get_crl_gnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return crl_urls as GeneralNames</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.get_issuer_urls_gnames">
+<code class="descname">get_issuer_urls_gnames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.get_issuer_urls_gnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.get_issuer_urls_gnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return issuer_urls as GeneralNames</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.get_name">
+<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create Name object from subject DN.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.get_ocsp_gnames">
+<code class="descname">get_ocsp_gnames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.get_ocsp_gnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.get_ocsp_gnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return ocsp_urls as GeneralNames</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.get_san_gnames">
+<code class="descname">get_san_gnames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.get_san_gnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.get_san_gnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return SubjectAltNames as GeneralNames</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.install_extensions">
+<code class="descname">install_extensions</code><span class="sig-paren">(</span><em>builder</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.install_extensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.install_extensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add common extensions to Cert- or CSR builder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.load_from_existing">
+<code class="descname">load_from_existing</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.load_from_existing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.load_from_existing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load certificate info from existing certificate or certificate request.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.load_gnames">
+<code class="descname">load_gnames</code><span class="sig-paren">(</span><em>gname_list</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.load_gnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.load_gnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts list of prefixed strings to GeneralName list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.load_name">
+<code class="descname">load_name</code><span class="sig-paren">(</span><em>nmap</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.load_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.load_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create Name object from subject DN.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.show">
+<code class="descname">show</code><span class="sig-paren">(</span><em>writeln</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.x509.ca.CertInfo.show_list">
+<code class="descname">show_list</code><span class="sig-paren">(</span><em>desc</em>, <em>lst</em>, <em>writeln</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#CertInfo.show_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.CertInfo.show_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out list field.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.as_bytes">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">as_bytes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#as_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.as_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return byte-string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.as_unicode">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">as_unicode</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#as_unicode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.as_unicode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return unicode-string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.cert_to_pem">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">cert_to_pem</code><span class="sig-paren">(</span><em>cert</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#cert_to_pem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.cert_to_pem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize certificate in PEM format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.create_x509_cert">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">create_x509_cert</code><span class="sig-paren">(</span><em>privkey</em>, <em>pubkey</em>, <em>subject_info</em>, <em>issuer_info</em>, <em>days</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#create_x509_cert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.create_x509_cert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main cert creation code.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.create_x509_req">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">create_x509_req</code><span class="sig-paren">(</span><em>privkey</em>, <em>subject_info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#create_x509_req"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.create_x509_req" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main CSR creation code.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.die">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">die</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#die"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.die" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print message and exit.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.dn_escape">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">dn_escape</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#dn_escape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.dn_escape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distinguishedname backslash-escape</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.do_output">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">do_output</code><span class="sig-paren">(</span><em>data</em>, <em>args</em>, <em>cmd</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#do_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.do_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output X509 structure</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.get_backend">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">get_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#get_backend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.get_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns backend to use.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.info_from_args">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">info_from_args</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#info_from_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.info_from_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect command-line args</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.key_to_pem">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">key_to_pem</code><span class="sig-paren">(</span><em>key</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#key_to_pem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.key_to_pem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize key in PEM format, optionally encrypted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.list_escape">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">list_escape</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#list_escape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.list_escape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Escape value for comma-separated list</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.load_cert">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">load_cert</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#load_cert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.load_cert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read CRT file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.load_gpg_file">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">load_gpg_file</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#load_gpg_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.load_gpg_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypt file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.load_key">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">load_key</code><span class="sig-paren">(</span><em>fn</em>, <em>psw=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#load_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.load_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read private key, decrypt if needed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.load_password">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">load_password</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#load_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.load_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read password from potentially gpg-encrypted file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.load_req">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">load_req</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#load_req"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.load_req" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read CSR file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.loop_escaped">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">loop_escaped</code><span class="sig-paren">(</span><em>val</em>, <em>c</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#loop_escaped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.loop_escaped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse list of strings, separated by c.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.make_key_usage">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">make_key_usage</code><span class="sig-paren">(</span><em>digital_signature=False</em>, <em>content_commitment=False</em>, <em>key_encipherment=False</em>, <em>data_encipherment=False</em>, <em>key_agreement=False</em>, <em>key_cert_sign=False</em>, <em>crl_sign=False</em>, <em>encipher_only=False</em>, <em>decipher_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#make_key_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.make_key_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default args for KeyUsage.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.maybe_parse">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">maybe_parse</code><span class="sig-paren">(</span><em>val</em>, <em>parse_func</em>, <em>default</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#maybe_parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.maybe_parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse argument value with func if string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.msg">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">msg</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print message to stderr.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.msg_show">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">msg_show</code><span class="sig-paren">(</span><em>ln</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#msg_show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.msg_show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.new_ec_key">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">new_ec_key</code><span class="sig-paren">(</span><em>name=’secp256r1’</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#new_ec_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.new_ec_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>New Elliptic Curve key</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.new_rsa_key">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">new_rsa_key</code><span class="sig-paren">(</span><em>bits=2048</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#new_rsa_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.new_rsa_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>New RSA key.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.newkey_command">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">newkey_command</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#newkey_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.newkey_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new key.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.parse_dn">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">parse_dn</code><span class="sig-paren">(</span><em>dnstr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#parse_dn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.parse_dn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse openssl-style /-separated list to dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.parse_list">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">parse_list</code><span class="sig-paren">(</span><em>slist</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#parse_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.parse_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse comma-separated list to strings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.render_name">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">render_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#render_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.render_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert DistinguishedName dict to ‘/’-separated string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.req_command">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">req_command</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#req_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.req_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load args, create CSR.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.req_to_pem">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">req_to_pem</code><span class="sig-paren">(</span><em>req</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#req_to_pem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.req_to_pem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize certificate request in PEM format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.same_pubkey">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">same_pubkey</code><span class="sig-paren">(</span><em>o1</em>, <em>o2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#same_pubkey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.same_pubkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare public keys.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.show_command">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">show_command</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#show_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.show_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump .crt and .csr files.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.sign_command">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">sign_command</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#sign_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.sign_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load args, output cert.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.ca.unescape">
+<code class="descclassname">tudoigual.x509.ca.</code><code class="descname">unescape</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/ca.html#unescape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.ca.unescape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove backslash escapes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tudoigual.x509.certs">
+<span id="tudoigual-x509-certs-module"></span><h2>tudoigual.x509.certs module<a class="headerlink" href="#module-tudoigual.x509.certs" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tudoigual.x509.certs.csr">
+<code class="descclassname">tudoigual.x509.certs.</code><code class="descname">csr</code><span class="sig-paren">(</span><em>key</em>, <em>subject</em>, <em>usage=”</em>, <em>alt_names=”</em>, <em>ocsp_nocheck=”</em>, <em>ocsp_urls=”</em>, <em>crl_urls=”</em>, <em>issuer_urls=”</em>, <em>permit_subtrees=”</em>, <em>exclude_subtrees=”</em>, <em>CA=”</em>, <em>path_length=0</em>, <em>password_file=”</em>, <em>out=”</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/certs.html#csr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.certs.csr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load args, create CSR.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.certs.new_Key">
+<code class="descclassname">tudoigual.x509.certs.</code><code class="descname">new_Key</code><span class="sig-paren">(</span><em>out</em>, <em>type=’ec’</em>, <em>password_file=”</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/certs.html#new_Key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.certs.new_Key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new key.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.certs.output">
+<code class="descclassname">tudoigual.x509.certs.</code><code class="descname">output</code><span class="sig-paren">(</span><em>data</em>, <em>cmd</em>, <em>text=”</em>, <em>out=”</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/certs.html#output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.certs.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output X509 structure</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.x509.certs.sign_csr">
+<code class="descclassname">tudoigual.x509.certs.</code><code class="descname">sign_csr</code><span class="sig-paren">(</span><em>csr</em>, <em>days=730</em>, <em>ca_cert=None</em>, <em>ca_key=None</em>, <em>password_file=”</em>, <em>out=’OverHere.pem’</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/x509/certs.html#sign_csr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.x509.certs.sign_csr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load args, output cert.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tudoigual.x509"></span></div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

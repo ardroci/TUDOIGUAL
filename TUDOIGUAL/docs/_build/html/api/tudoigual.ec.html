@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.ec package &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tudoigual.rsa package" href="tudoigual.rsa.html" />
+    <link rel="prev" title="tudoigual.dh package" href="tudoigual.dh.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">tudoigual.ec package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-tudoigual.ec.ec_elgamal">tudoigual.ec.ec_elgamal module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.ec.ecdsa">tudoigual.ec.ecdsa module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.ec.gen">tudoigual.ec.gen module</a></li>
+<li><a class="reference internal" href="#tudoigual-ec-hkdf-module">tudoigual.ec.hkdf module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.ec">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="tudoigual.dh.html" title="Previous Chapter: tudoigual.dh package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; tudoigual.dh package</span>
+    </a>
+  </li>
+  <li>
+    <a href="tudoigual.rsa.html" title="Next Chapter: tudoigual.rsa package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">tudoigual.rsa package &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/tudoigual.ec.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="tudoigual-ec-package">
+<h1>tudoigual.ec package<a class="headerlink" href="#tudoigual-ec-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tudoigual.ec.ec_elgamal">
+<span id="tudoigual-ec-ec-elgamal-module"></span><h2>tudoigual.ec.ec_elgamal module<a class="headerlink" href="#module-tudoigual.ec.ec_elgamal" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tudoigual.ec.ec_elgamal.EC_ElGamal">
+<em class="property">class </em><code class="descclassname">tudoigual.ec.ec_elgamal.</code><code class="descname">EC_ElGamal</code><span class="sig-paren">(</span><em>ec=&lt;tudoigual.utils.ec_curves.EC_curve object&gt;</em>, <em>key=None</em>, <em>cert=None</em>, <em>password_file=”</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ec_elgamal.html#EC_ElGamal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ec_elgamal.EC_ElGamal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="tudoigual.ec.ec_elgamal.EC_ElGamal.decrypt">
+<code class="descname">decrypt</code><span class="sig-paren">(</span><em>Y</em>, <em>iv</em>, <em>ciphertext</em>, <em>salt</em>, <em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ec_elgamal.html#EC_ElGamal.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ec_elgamal.EC_ElGamal.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.ec.ec_elgamal.EC_ElGamal.encrypt">
+<code class="descname">encrypt</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ec_elgamal.html#EC_ElGamal.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ec_elgamal.EC_ElGamal.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>ECIES</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.ec.ec_elgamal.EC_ElGamal.gen_keys">
+<code class="descname">gen_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ec_elgamal.html#EC_ElGamal.gen_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ec_elgamal.EC_ElGamal.gen_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.ec.ec_elgamal.EC_ElGamal.set_pkB">
+<code class="descname">set_pkB</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ec_elgamal.html#EC_ElGamal.set_pkB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ec_elgamal.EC_ElGamal.set_pkB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.ec.ec_elgamal.EC_ElGamal.sign">
+<code class="descname">sign</code><span class="sig-paren">(</span><em>data</em>, <em>sk</em>, <em>hash=&lt;built-in function openssl_sha256&gt;</em>, <em>k=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ec_elgamal.html#EC_ElGamal.sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ec_elgamal.EC_ElGamal.sign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.ec.ec_elgamal.EC_ElGamal.verify_signature">
+<code class="descname">verify_signature</code><span class="sig-paren">(</span><em>r</em>, <em>s</em>, <em>pk</em>, <em>data</em>, <em>hash=&lt;built-in function openssl_sha256&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ec_elgamal.html#EC_ElGamal.verify_signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ec_elgamal.EC_ElGamal.verify_signature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tudoigual.ec.ecdsa">
+<span id="tudoigual-ec-ecdsa-module"></span><h2>tudoigual.ec.ecdsa module<a class="headerlink" href="#module-tudoigual.ec.ecdsa" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tudoigual.ec.ecdsa.Signature">
+<em class="property">class </em><code class="descclassname">tudoigual.ec.ecdsa.</code><code class="descname">Signature</code><span class="sig-paren">(</span><em>r</em>, <em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ecdsa.html#Signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ecdsa.Signature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.ec.ecdsa.sign">
+<code class="descclassname">tudoigual.ec.ecdsa.</code><code class="descname">sign</code><span class="sig-paren">(</span><em>self</em>, <em>data</em>, <em>sk</em>, <em>hash=&lt;built-in function openssl_sha256&gt;</em>, <em>k=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ecdsa.html#sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ecdsa.sign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.ec.ecdsa.verify_signature">
+<code class="descclassname">tudoigual.ec.ecdsa.</code><code class="descname">verify_signature</code><span class="sig-paren">(</span><em>self</em>, <em>signature</em>, <em>pk</em>, <em>data</em>, <em>hash=&lt;built-in function openssl_sha256&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/ecdsa.html#verify_signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.ecdsa.verify_signature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-tudoigual.ec.gen">
+<span id="tudoigual-ec-gen-module"></span><h2>tudoigual.ec.gen module<a class="headerlink" href="#module-tudoigual.ec.gen" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tudoigual.ec.gen.ECPoint">
+<em class="property">class </em><code class="descclassname">tudoigual.ec.gen.</code><code class="descname">ECPoint</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>ec=&lt;tudoigual.utils.ec_curves.EC_curve object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/gen.html#ECPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.gen.ECPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class defining a point for the EC</p>
+<dl class="method">
+<dt id="tudoigual.ec.gen.ECPoint.doublePoint">
+<code class="descname">doublePoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/gen.html#ECPoint.doublePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.gen.ECPoint.doublePoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tudoigual.ec.gen.ECPoint.ec">
+<code class="descname">ec</code><em class="property"> = &lt;tudoigual.utils.ec_curves.EC_curve object&gt;</em><a class="headerlink" href="#tudoigual.ec.gen.ECPoint.ec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.ec.gen.ECPoint.multiplyPointByScalar">
+<code class="descname">multiplyPointByScalar</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/gen.html#ECPoint.multiplyPointByScalar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.gen.ECPoint.multiplyPointByScalar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tudoigual.ec.gen.ECPoint.sum">
+<code class="descname">sum</code><span class="sig-paren">(</span><em>p2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/gen.html#ECPoint.sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.gen.ECPoint.sum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tudoigual.ec.gen.ECPoint.x">
+<code class="descname">x</code><em class="property"> = 0</em><a class="headerlink" href="#tudoigual.ec.gen.ECPoint.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tudoigual.ec.gen.ECPoint.y">
+<code class="descname">y</code><em class="property"> = 0</em><a class="headerlink" href="#tudoigual.ec.gen.ECPoint.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="tudoigual-ec-hkdf-module">
+<h2>tudoigual.ec.hkdf module<a class="headerlink" href="#tudoigual-ec-hkdf-module" title="Permalink to this headline">¶</a></h2>
+<p>This document specifies a simple Hashed Message Authentication Code
+(HMAC)-based key derivation function (HKDF), which can be used as a building
+block in various protocols and applications.  The key derivation function (KDF)
+is intended to support a wide range of applications and requirements, and is
+conservative in its use of cryptographic hash functions.</p>
+<dl class="class">
+<dt id="tudoigual.ec.hkdf.HKDF">
+<em class="property">class </em><code class="descclassname">tudoigual.ec.hkdf.</code><code class="descname">HKDF</code><span class="sig-paren">(</span><em>salt</em>, <em>input_key_material</em>, <em>hash=&lt;built-in function openssl_sha256&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/hkdf.html#HKDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.hkdf.HKDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>HKDF follows the “extract-then-expand” paradigm, where the KDF logically
+consists of two modules.  The first stage takes the input keying material
+and “extracts” from it a fixed-length pseudorandom key K.  The second stage
+“expands” the key K into several additional pseudorandom keys (the output
+of the KDF).</p>
+<dl class="method">
+<dt id="tudoigual.ec.hkdf.HKDF.expand">
+<code class="descname">expand</code><span class="sig-paren">(</span><em>info=b”</em>, <em>length=32</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/hkdf.html#HKDF.expand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.hkdf.HKDF.expand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.ec.hkdf.buffer">
+<code class="descclassname">tudoigual.ec.hkdf.</code><code class="descname">buffer</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#tudoigual.ec.hkdf.buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.ec.hkdf.decode_hex">
+<code class="descclassname">tudoigual.ec.hkdf.</code><code class="descname">decode_hex</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/hkdf.html#decode_hex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.hkdf.decode_hex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.ec.hkdf.hkdf_expand">
+<code class="descclassname">tudoigual.ec.hkdf.</code><code class="descname">hkdf_expand</code><span class="sig-paren">(</span><em>pseudo_random_key</em>, <em>info=b”</em>, <em>length=32</em>, <em>hash=&lt;built-in function openssl_sha256&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/hkdf.html#hkdf_expand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.hkdf.hkdf_expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>“expands” the pseudorandom key and info to the desired length in bytes; the number and
+lengths of the output keys depend on the specific cryptographic algorithms
+for which the keys are needed.</p>
+<p>HKDF-Expand(PRK, info, L) -&gt; OKM
+Options:</p>
+<blockquote>
+<div>Hash        a hash function; HashLen denotes the length of the hash function output in octets</div></blockquote>
+<p>Inputs:
+PRK           a pseudorandom key of at least HashLen octets (usually, the output from the extract step)
+info  optional context and application specific information
+L             length of output keying material in octets (&lt;= 255*HashLen)</p>
+<dl class="docutils">
+<dt>Output:</dt>
+<dd>OKM         output keying material (of L octets)</dd>
+</dl>
+<p>The output OKM is calculated as follows:
+N = ceil(L/HashLen)
+T = T(1) | T(2) | T(3) | … | T(N)
+OKM = first L octets of T
+where:
+T(0) = empty string (zero length)
+T(1) = HMAC-Hash(PRK, T(0) | info | 0x01)
+T(2) = HMAC-Hash(PRK, T(1) | info | 0x02)
+T(3) = HMAC-Hash(PRK, T(2) | info | 0x03)
+…
+(where the constant concatenated to the end of each T(n) is a single octet.)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.ec.hkdf.hkdf_extract">
+<code class="descclassname">tudoigual.ec.hkdf.</code><code class="descname">hkdf_extract</code><span class="sig-paren">(</span><em>salt</em>, <em>input_key_material</em>, <em>hash=&lt;built-in function openssl_sha256&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/ec/hkdf.html#hkdf_extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.ec.hkdf.hkdf_extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>The goal of the “extract” stage is to “concentrate” the possibly dispersed
+entropy of the input keying material into a short, but cryptographically
+strong, pseudorandom key.</p>
+<p>HKDF-Extract(salt, IKM) -&gt; PRK
+Options:</p>
+<blockquote>
+<div>Hash        a hash function; HashLen denotes the length of the hash function output in octets</div></blockquote>
+<dl class="docutils">
+<dt>Inputs:</dt>
+<dd>salt        optional salt value (a non-secret random value); if not provided, it is set to a string of HashLen zeros.
+IKM         input keying material</dd>
+<dt>Output:</dt>
+<dd>PRK         a pseudorandom key (of HashLen octets)</dd>
+</dl>
+<p>The output PRK is calculated as follows:
+PRK = HMAC-Hash(salt, IKM)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tudoigual.ec">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tudoigual.ec" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

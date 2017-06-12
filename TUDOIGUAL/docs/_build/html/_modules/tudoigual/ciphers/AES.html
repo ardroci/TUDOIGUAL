@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.ciphers.AES &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for tudoigual.ciphers.AES</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">binascii</span> <span class="k">import</span> <span class="n">hexlify</span><span class="p">,</span> <span class="n">unhexlify</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span>
+<span class="kn">from</span> <span class="nn">Crypto</span> <span class="k">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="k">import</span> <span class="n">AES</span>
+<span class="kn">from</span> <span class="nn">Crypto.Util</span> <span class="k">import</span> <span class="n">Counter</span>
+
+
+<div class="viewcode-block" id="AES_Cipher"><a class="viewcode-back" href="../../../api/tudoigual.ciphers.html#tudoigual.ciphers.AES.AES_Cipher">[docs]</a><span class="k">class</span> <span class="nc">AES_Cipher</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of the Advanced Encryption Standard cipher in mode Cipher Block Chaining and Counter Mode. Both with PKCS7 Padding or with no padding.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plaintext</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plaintext padding with the PKCS7 padding scheme.</span>
+
+<span class="sd">        :param str plaintext:</span>
+<span class="sd">            Plaintext to apply padding</span>
+<span class="sd">        :return:</span>
+<span class="sd">            Padded plaintext.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">plaintext</span> <span class="o">+</span> <span class="p">((</span><span class="n">AES</span><span class="o">.</span><span class="n">block_size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)</span> <span class="o">%</span> <span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">)</span> <span class="o">*</span> <span class="nb">chr</span><span class="p">(</span><span class="n">AES</span><span class="o">.</span><span class="n">block_size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)</span> <span class="o">%</span> <span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__unpad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove PKCS7 padding.</span>
+
+<span class="sd">        :param str ciphertext:</span>
+<span class="sd">            Ciphertext where we want to remove the padding.</span>
+<span class="sd">        :return:</span>
+<span class="sd">            Ciphertext without padding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ciphertext</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">ciphertext</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+<div class="viewcode-block" id="AES_Cipher.encrypt"><a class="viewcode-back" href="../../../api/tudoigual.ciphers.html#tudoigual.ciphers.AES.AES_Cipher.encrypt">[docs]</a>    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plaintext</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encrypt given plaintext.</span>
+
+<span class="sd">        :param str pad:</span>
+<span class="sd">            Padding scheme, default is PKCS7.</span>
+<span class="sd">        :param int mode:</span>
+<span class="sd">            Cipher mode of operation (2 - Cipher Block Chaining, 6 - Counter Mode)</span>
+<span class="sd">            Cipher Block Chaining is the default mode.</span>
+<span class="sd">        :param str iv:</span>
+<span class="sd">            Initial vector. The default value is none so it would be created a 16 bytes random initial vector for the cipher.</span>
+<span class="sd">        :return:</span>
+<span class="sd">            A tuple containing the iv and the ciphertext.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_pad</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pad&#39;</span><span class="p">,</span> <span class="s1">&#39;PKCS7&#39;</span><span class="p">)</span>
+        <span class="n">_mode</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">_iv</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;iv&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">_key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_pad</span> <span class="o">==</span> <span class="s1">&#39;PKCS7&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">plaintext</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pad</span><span class="p">(</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">plaintext</span><span class="p">))</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">plaintext</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pad</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_iv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_IV</span> <span class="o">=</span> <span class="n">Random</span><span class="o">.</span><span class="n">new</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_IV</span> <span class="o">=</span> <span class="n">unhexlify</span><span class="p">(</span><span class="n">_iv</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">_IV</span> <span class="o">=</span> <span class="n">_iv</span>
+
+        <span class="k">if</span> <span class="n">_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_KEY</span> <span class="o">=</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">Random</span><span class="o">.</span><span class="n">new</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">))</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_KEY</span> <span class="o">=</span> <span class="n">unhexlify</span><span class="p">(</span><span class="n">_key</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">_KEY</span> <span class="o">=</span> <span class="n">_key</span>
+
+        <span class="k">if</span> <span class="n">_mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">_cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_KEY</span><span class="p">,</span> <span class="n">_mode</span><span class="p">,</span> <span class="n">_IV</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_mode</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">_ctr</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+                <span class="n">AES</span><span class="o">.</span><span class="n">block_size</span> <span class="o">*</span> <span class="mi">8</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">_IV</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span> <span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">),</span> <span class="n">allow_wraparound</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">_cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_KEY</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">counter</span><span class="o">=</span><span class="n">_ctr</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_ciphertext</span> <span class="o">=</span> <span class="n">_cipher</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">plaintext</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">_ciphertext</span> <span class="o">=</span> <span class="n">_cipher</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_IV</span><span class="p">,</span> <span class="n">_ciphertext</span></div>
+
+<div class="viewcode-block" id="AES_Cipher.decrypt"><a class="viewcode-back" href="../../../api/tudoigual.ciphers.html#tudoigual.ciphers.AES.AES_Cipher.decrypt">[docs]</a>    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decrypt given ciphertext.</span>
+
+<span class="sd">        :param str pad:</span>
+<span class="sd">            type of padding.</span>
+<span class="sd">            default is PKCS7.</span>
+<span class="sd">        :param int mode:</span>
+<span class="sd">            cipher mode of operation (2 - cipher block chaining, 6 - counter mode)</span>
+<span class="sd">            default is cipher block chainig.</span>
+<span class="sd">        :return:</span>
+<span class="sd">            Plaintext.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_pad</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pad&#39;</span><span class="p">,</span> <span class="s1">&#39;PKCS7&#39;</span><span class="p">)</span>
+        <span class="n">_mode</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">_key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span>  <span class="kc">None</span><span class="p">)</span>
+        <span class="n">_iv</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;iv&#39;</span><span class="p">,</span>   <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_CIPHERTEXT</span> <span class="o">=</span> <span class="n">unhexlify</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">_CIPHERTEXT</span> <span class="o">=</span> <span class="n">ciphertext</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_IV</span> <span class="o">=</span> <span class="n">unhexlify</span><span class="p">(</span><span class="n">_iv</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">_IV</span> <span class="o">=</span> <span class="n">_iv</span>
+
+        <span class="k">if</span> <span class="n">_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_KEY</span> <span class="o">=</span> <span class="n">unhexlify</span><span class="p">(</span><span class="n">_key</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Incomplete</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">_KEY</span> <span class="o">=</span> <span class="n">_key</span>
+
+        <span class="k">if</span> <span class="n">_mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">_cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_KEY</span><span class="p">,</span> <span class="n">_mode</span><span class="p">,</span> <span class="n">_IV</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_mode</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">_ctr</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+                <span class="n">AES</span><span class="o">.</span><span class="n">block_size</span> <span class="o">*</span> <span class="mi">8</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">_IV</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span> <span class="n">AES</span><span class="o">.</span><span class="n">block_size</span><span class="p">),</span> <span class="n">allow_wraparound</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">_cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_KEY</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">counter</span><span class="o">=</span><span class="n">_ctr</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_pad</span> <span class="o">==</span> <span class="s1">&#39;PKCS7&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unpad</span><span class="p">(</span><span class="n">_cipher</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">_CIPHERTEXT</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_cipher</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">_CIPHERTEXT</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

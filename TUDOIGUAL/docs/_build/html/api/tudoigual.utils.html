@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.utils package &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tudoigual.x509 package" href="tudoigual.x509.html" />
+    <link rel="prev" title="tudoigual.rsa package" href="tudoigual.rsa.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">tudoigual.utils package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-tudoigual.utils.decorators">tudoigual.utils.decorators module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.utils.ec_curves">tudoigual.utils.ec_curves module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.utils.exceptions">tudoigual.utils.exceptions module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.utils.number_theory">tudoigual.utils.number_theory module</a></li>
+<li><a class="reference internal" href="#tudoigual-utils-old-ec-curves-module">tudoigual.utils.old-ec_curves module</a></li>
+<li><a class="reference internal" href="#tudoigual-utils-primes-module">tudoigual.utils.primes module</a></li>
+<li><a class="reference internal" href="#module-tudoigual.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="tudoigual.rsa.html" title="Previous Chapter: tudoigual.rsa package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; tudoigual.rsa package</span>
+    </a>
+  </li>
+  <li>
+    <a href="tudoigual.x509.html" title="Next Chapter: tudoigual.x509 package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">tudoigual.x50... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/tudoigual.utils.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="tudoigual-utils-package">
+<h1>tudoigual.utils package<a class="headerlink" href="#tudoigual-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tudoigual.utils.decorators">
+<span id="tudoigual-utils-decorators-module"></span><h2>tudoigual.utils.decorators module<a class="headerlink" href="#module-tudoigual.utils.decorators" title="Permalink to this headline">¶</a></h2>
+<p>decorators declares some decorators that ensure the object has the
+correct keys declared when need be.</p>
+<dl class="function">
+<dt id="tudoigual.utils.decorators.requires_private_key">
+<code class="descclassname">tudoigual.utils.decorators.</code><code class="descname">requires_private_key</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/decorators.html#requires_private_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.decorators.requires_private_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for functions that require the private key to be defined.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.utils.decorators.requires_public_key">
+<code class="descclassname">tudoigual.utils.decorators.</code><code class="descname">requires_public_key</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/decorators.html#requires_public_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.decorators.requires_public_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for functions that require the public key to be defined.
+By definition, this includes the private key, as such, it’s enough to use this to effect definition of both public and private key.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tudoigual.utils.ec_curves">
+<span id="tudoigual-utils-ec-curves-module"></span><h2>tudoigual.utils.ec_curves module<a class="headerlink" href="#module-tudoigual.utils.ec_curves" title="Permalink to this headline">¶</a></h2>
+<p>SEC 2: Recommended Elliptic Curve Domain Parameters</p>
+<dl class="class">
+<dt id="tudoigual.utils.ec_curves.EC_curve">
+<em class="property">class </em><code class="descclassname">tudoigual.utils.ec_curves.</code><code class="descname">EC_curve</code><span class="sig-paren">(</span><em>p</em>, <em>a</em>, <em>b</em>, <em>g_x</em>, <em>g_y</em>, <em>n</em>, <em>h</em>, <em>fieldSize</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/ec_curves.html#EC_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.ec_curves.EC_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Elliptic curve domain parameters over Fp are a sextuple:
+T = (p, a, b, G, n, h)
+consisting of an integer p specifying the finite field Fp,
+two elements a, b E Fp, specifying an elliptic curve E(Fp)
+defined by the equation:
+E : y^2 = x^3 + a * x + b (mod p)
+a base point G = (xG, yG) on E(Fp) , a prime n which is the order of G,
+and an integer h which is the cofactor h = #E(Fp) / n.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="tudoigual.utils.ec_curves.EC_curve_secp192r1">
+<code class="descclassname">tudoigual.utils.ec_curves.</code><code class="descname">EC_curve_secp192r1</code><em class="property"> = &lt;tudoigual.utils.ec_curves.EC_curve object&gt;</em><a class="headerlink" href="#tudoigual.utils.ec_curves.EC_curve_secp192r1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recommended 256-bit Elliptic Curve Domain Parameters over Fp.</p>
+<p>The verifiably random elliptic curve domain parameters over Fp
+secp256r1 are specified by the sextuple T = (p,a, b, G, n, h)
+where the finite field Fp is defined by:
+p = FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFF</p>
+<blockquote>
+<div>= 2^(224) * (2^(32) - 1) + 2^(192) + 2^(96) -1</div></blockquote>
+<p>The curve E: y^2 = x^3 + ax + b over Fp is defined by:
+a = FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFC
+b = 5AC635D8 AA3A93E7 B3EBBD55 769886BC 651D06B0 CC53B0F6 3BCE3C3E 27D2604B
+E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed:
+S = C49D3608 86E70493 6A6678E1 139D26B7 819F7E90
+The base point G in compressed form is:
+G = 03 6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296
+and in uncompressed form is:
+G = 04 6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296 4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5
+Finally the order n of G and the cofactor are:
+n = FFFFFFFF 00000000 FFFFFFFF FFFFFFFF BCE6FAAD A7179E84 F3B9CAC2 FC632551
+h = 01</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="tudoigual.utils.ec_curves.EC_curve_secp256r1">
+<code class="descclassname">tudoigual.utils.ec_curves.</code><code class="descname">EC_curve_secp256r1</code><em class="property"> = &lt;tudoigual.utils.ec_curves.EC_curve object&gt;</em><a class="headerlink" href="#tudoigual.utils.ec_curves.EC_curve_secp256r1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recommended 521-bit Elliptic Curve Domain Parameters over Fp</p>
+<p>The verifiably random elliptic curve domain parameters over Fp
+secp512r1 are specified by the sextuple T = (p,a, b, G, n, h)
+where the finite field Fp is defined by:
+p = 01FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFF</p>
+<blockquote>
+<div>= 2^(521) - 1</div></blockquote>
+<p>The curve E: y^2 = x^3 + ax + b over Fp is defined by:
+a = 01FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFF FFFFFFFC
+b = 0051 953EB961 8E1C9A1F 929A21A0 B68540EE A2DA725B 99B315F3
+B8B48991 8EF109E1 56193951 EC7E937B 1652C0BD 3BB1BF07 3573DF88
+3D2C34F1 EF451FD4 6B503F00
+E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed:
+S = D09E8800 291CB853 96CC6717 393284AA A0DA64BA
+The base point G in compressed form is:
+G = 0200C6 858E06B7 0404E9CD 9E3ECB66 2395B442 9C648139 053FB521</p>
+<blockquote>
+<div>F828AF60 6B4D3DBA A14B5E77 EFE75928 FE1DC127 A2FFA8DE 3348B3C1
+856A429B F97E7E31 C2E5BD66</div></blockquote>
+<p>and in uncompressed form is:
+G =   04 00C6858E 06B70404 E9CD9E3E CB662395 B4429C64 8139053F
+B521F828 AF606B4D 3DBAA14B 5E77EFE7 5928FE1D C127A2FF A8DE3348
+B3C1856A 429BF97E 7E31C2E5 BD660118 39296A78 9A3BC004 5C8A5FB4
+2C7D1BD9 98F54449 579B4468 17AFBD17 273E662C 97EE7299 5EF42640
+C550B901 3FAD0761 353C7086 A272C240 88BE9476 9FD16650</p>
+<p>Finally the order n of G and the cofactor are:
+n = 01FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
+FFFFFFFF FFFFFFFA 51868783 BF2F966B 7FCC0148 F709A5D0 3BB5C9B8
+899C47AE BB6FB71E 91386409
+h = 01</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tudoigual.utils.exceptions">
+<span id="tudoigual-utils-exceptions-module"></span><h2>tudoigual.utils.exceptions module<a class="headerlink" href="#module-tudoigual.utils.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>exceptions is responsible for exception handling etc.</p>
+<dl class="exception">
+<dt id="tudoigual.utils.exceptions.InvalidHashFunction">
+<em class="property">exception </em><code class="descclassname">tudoigual.utils.exceptions.</code><code class="descname">InvalidHashFunction</code><a class="reference internal" href="../_modules/tudoigual/utils/exceptions.html#InvalidHashFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.exceptions.InvalidHashFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>Thrown when select cryptographic hash functions is not correct.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="tudoigual.utils.exceptions.InvalidSignature">
+<em class="property">exception </em><code class="descclassname">tudoigual.utils.exceptions.</code><code class="descname">InvalidSignature</code><a class="reference internal" href="../_modules/tudoigual/utils/exceptions.html#InvalidSignature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.exceptions.InvalidSignature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>Thrown when fails to verify Signature.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="tudoigual.utils.exceptions.InvalidSignatureParameter">
+<em class="property">exception </em><code class="descclassname">tudoigual.utils.exceptions.</code><code class="descname">InvalidSignatureParameter</code><a class="reference internal" href="../_modules/tudoigual/utils/exceptions.html#InvalidSignatureParameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.exceptions.InvalidSignatureParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>Thrown when signature parameters are not in the correct interval.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="tudoigual.utils.exceptions.MACError">
+<em class="property">exception </em><code class="descclassname">tudoigual.utils.exceptions.</code><code class="descname">MACError</code><a class="reference internal" href="../_modules/tudoigual/utils/exceptions.html#MACError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.exceptions.MACError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>Thrown when fails to verify Message Authentication Code.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="tudoigual.utils.exceptions.MalformedPublicKey">
+<em class="property">exception </em><code class="descclassname">tudoigual.utils.exceptions.</code><code class="descname">MalformedPublicKey</code><a class="reference internal" href="../_modules/tudoigual/utils/exceptions.html#MalformedPublicKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.exceptions.MalformedPublicKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>The public key is malformed as it does not meet the Legendre symbol criterion. The key might have been tampered with or might have been damaged in transit.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="tudoigual.utils.exceptions.RNGError">
+<em class="property">exception </em><code class="descclassname">tudoigual.utils.exceptions.</code><code class="descname">RNGError</code><a class="reference internal" href="../_modules/tudoigual/utils/exceptions.html#RNGError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.exceptions.RNGError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">BaseException</span></code></p>
+<p>Thrown when RNG could not be obtained.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tudoigual.utils.number_theory">
+<span id="tudoigual-utils-number-theory-module"></span><h2>tudoigual.utils.number_theory module<a class="headerlink" href="#module-tudoigual.utils.number_theory" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tudoigual.utils.number_theory.bit_length">
+<code class="descclassname">tudoigual.utils.number_theory.</code><code class="descname">bit_length</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/number_theory.html#bit_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.number_theory.bit_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the number of bits of self</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.utils.number_theory.eea">
+<code class="descclassname">tudoigual.utils.number_theory.</code><code class="descname">eea</code><span class="sig-paren">(</span><em>value</em>, <em>mod</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/number_theory.html#eea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.number_theory.eea" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.utils.number_theory.egcd">
+<code class="descclassname">tudoigual.utils.number_theory.</code><code class="descname">egcd</code><span class="sig-paren">(</span><em>value</em>, <em>mod</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/number_theory.html#egcd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.number_theory.egcd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.utils.number_theory.extended_gcd">
+<code class="descclassname">tudoigual.utils.number_theory.</code><code class="descname">extended_gcd</code><span class="sig-paren">(</span><em>aa</em>, <em>bb</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/number_theory.html#extended_gcd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.number_theory.extended_gcd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.utils.number_theory.modInverse">
+<code class="descclassname">tudoigual.utils.number_theory.</code><code class="descname">modInverse</code><span class="sig-paren">(</span><em>a</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/number_theory.html#modInverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.number_theory.modInverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the inverse of a modulo n</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.utils.number_theory.modinv">
+<code class="descclassname">tudoigual.utils.number_theory.</code><code class="descname">modinv</code><span class="sig-paren">(</span><em>a</em>, <em>m</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/number_theory.html#modinv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.number_theory.modinv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tudoigual.utils.number_theory.mulinv">
+<code class="descclassname">tudoigual.utils.number_theory.</code><code class="descname">mulinv</code><span class="sig-paren">(</span><em>value</em>, <em>mod</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tudoigual/utils/number_theory.html#mulinv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tudoigual.utils.number_theory.mulinv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="tudoigual-utils-old-ec-curves-module">
+<h2>tudoigual.utils.old-ec_curves module<a class="headerlink" href="#tudoigual-utils-old-ec-curves-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="tudoigual-utils-primes-module">
+<h2>tudoigual.utils.primes module<a class="headerlink" href="#tudoigual-utils-primes-module" title="Permalink to this headline">¶</a></h2>
+<p>One of the important protocol parameters negotiated by Internet Key
+Exchange (IKE) [RFC-2409] is the Diffie-Hellman “group” that will be used for certain cryptographic operations.
+IKE currently defines 4 groups.  These groups are approximately as strong as a symmetric key of 70-80 bits.</p>
+<p>The new Advanced Encryption Standard (AES) cipher [AES], which has more strength, needs stronger groups.
+For the 128-bit AES we need about a 3200-bit group [Orman01].
+The 192 and 256-bit keys would need groups that are about 8000 and 15400 bits respectively.
+Another source [RSA13] [Rousseau00] estimates that the security equivalent key size for the 192-bit symmetric cipher is 2500 bits instead of 8000 bits, and the equivalent key size 256-bit symmetric cipher is 4200 bits instead of 15400 bits.</p>
+<p>The exponent size used in the Diffie-Hellman must be selected so that it matches other parts of the system.
+It should not be the weakest link in the security system.
+It should have double the entropy of the strength of the entire system, i.e., if you use a group whose strength is 128 bits, you must use more than 256 bits of randomness in the exponent used in the Diffie-Hellman calculation.</p>
+</div>
+<div class="section" id="module-tudoigual.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tudoigual.utils" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

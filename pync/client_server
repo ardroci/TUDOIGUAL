@@ -1,0 +1,29 @@
+
+server_new_diff(const char *repo, const char *diff, unsigned int len);
+
+server_new_diff(repo, diff, len):
+	pass
+
+server_req_key(const char *repo);
+
+server_req_key(repo):
+	pass
+
+server_listen_repo(const char *repo);
+
+server_listen_repo(repo):
+	.
+	.
+	.
+
+	
+	server_send(json)
+
+
+server_send(message):
+
+
+server_ret_key(key):
+	.
+	.
+	.

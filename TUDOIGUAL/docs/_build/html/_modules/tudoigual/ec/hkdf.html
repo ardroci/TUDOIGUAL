@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.ec.hkdf &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for tudoigual.ec.hkdf</h1><div class="highlight"><pre>
+<span></span><span class="c1"># !/usr/bin/env python</span>
+<span class="c1"># -*- encoding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      HMAC-based Extract-and-Expand Key Derivation Function (HKDF)</span>
+
+<span class="sd">This document specifies a simple Hashed Message Authentication Code</span>
+<span class="sd">(HMAC)-based key derivation function (HKDF), which can be used as a building</span>
+<span class="sd">block in various protocols and applications.  The key derivation function (KDF)</span>
+<span class="sd">is intended to support a wide range of applications and requirements, and is</span>
+<span class="sd">conservative in its use of cryptographic hash functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
+<span class="kn">from</span> <span class="nn">binascii</span> <span class="k">import</span> <span class="n">unhexlify</span><span class="p">,</span> <span class="n">hexlify</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;rcoliveira&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span>
+
+<div class="viewcode-block" id="decode_hex"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.hkdf.decode_hex">[docs]</a><span class="k">def</span> <span class="nf">decode_hex</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">codecs</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;hex_codec&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="hkdf_extract"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.hkdf.hkdf_extract">[docs]</a><span class="k">def</span> <span class="nf">hkdf_extract</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="n">input_key_material</span><span class="p">,</span> <span class="nb">hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  The goal of the &quot;extract&quot; stage is to &quot;concentrate&quot; the possibly dispersed</span>
+<span class="sd">  entropy of the input keying material into a short, but cryptographically</span>
+<span class="sd">  strong, pseudorandom key.</span>
+
+<span class="sd">  HKDF-Extract(salt, IKM) -&gt; PRK</span>
+<span class="sd">  Options:</span>
+<span class="sd">    Hash	a hash function; HashLen denotes the length of the hash function output in octets</span>
+<span class="sd">  Inputs:</span>
+<span class="sd">    salt	optional salt value (a non-secret random value); if not provided, it is set to a string of HashLen zeros.</span>
+<span class="sd">    IKM		input keying material</span>
+<span class="sd">  Output:</span>
+<span class="sd">    PRK		a pseudorandom key (of HashLen octets)</span>
+<span class="sd">  The output PRK is calculated as follows:</span>
+<span class="sd">  PRK = HMAC-Hash(salt, IKM)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">Hash_len</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">()</span><span class="o">.</span><span class="n">digest_size</span>
+  <span class="k">if</span> <span class="n">salt</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">salt</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">((</span><span class="mi">0</span><span class="p">,)</span> <span class="o">*</span> <span class="n">Hash_len</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">input_key_material</span><span class="p">,</span> <span class="n">digestmod</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="hkdf_expand"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.hkdf.hkdf_expand">[docs]</a><span class="k">def</span> <span class="nf">hkdf_expand</span><span class="p">(</span><span class="n">pseudo_random_key</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="nb">hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  &quot;expands&quot; the pseudorandom key and info to the desired length in bytes; the number and</span>
+<span class="sd">  lengths of the output keys depend on the specific cryptographic algorithms</span>
+<span class="sd">  for which the keys are needed.</span>
+
+<span class="sd">  HKDF-Expand(PRK, info, L) -&gt; OKM</span>
+<span class="sd">  Options:</span>
+<span class="sd">    Hash	a hash function; HashLen denotes the length of the hash function output in octets</span>
+<span class="sd">  Inputs:</span>
+<span class="sd">  PRK		a pseudorandom key of at least HashLen octets (usually, the output from the extract step)</span>
+<span class="sd">  info	optional context and application specific information</span>
+<span class="sd">  L		length of output keying material in octets (&lt;= 255*HashLen)</span>
+
+<span class="sd">  Output:</span>
+<span class="sd">    OKM		output keying material (of L octets)</span>
+
+<span class="sd">  The output OKM is calculated as follows:</span>
+<span class="sd">  N = ceil(L/HashLen)</span>
+<span class="sd">  T = T(1) | T(2) | T(3) | ... | T(N)</span>
+<span class="sd">  OKM = first L octets of T</span>
+<span class="sd">  where:</span>
+<span class="sd">  T(0) = empty string (zero length)</span>
+<span class="sd">  T(1) = HMAC-Hash(PRK, T(0) | info | 0x01)</span>
+<span class="sd">  T(2) = HMAC-Hash(PRK, T(1) | info | 0x02)</span>
+<span class="sd">  T(3) = HMAC-Hash(PRK, T(2) | info | 0x03)</span>
+<span class="sd">  ...</span>
+<span class="sd">  (where the constant concatenated to the end of each T(n) is a single octet.)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">Hash_len</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">()</span><span class="o">.</span><span class="n">digest_size</span>
+  <span class="n">length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">Hash_len</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot expand to more than 255 * </span><span class="si">%d</span><span class="s2"> = </span><span class="si">%d</span><span class="s2"> bytes using the specified hash function&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Hash_len</span><span class="p">,</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">hash_len</span><span class="p">))</span>
+  <span class="n">blocks_needed</span> <span class="o">=</span> <span class="n">length</span> <span class="o">//</span> <span class="n">Hash_len</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">length</span> <span class="o">%</span> <span class="n">Hash_len</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># ceil</span>
+  <span class="n">OKM</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+  <span class="n">output_block</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+  <span class="k">for</span> <span class="n">counter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">blocks_needed</span><span class="p">):</span>
+    <span class="n">output_block</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">pseudo_random_key</span><span class="p">,</span> <span class="n">output_block</span> <span class="o">+</span> <span class="n">info</span> <span class="o">+</span> <span class="nb">bytearray</span><span class="p">((</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,)),</span> <span class="nb">hash</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    <span class="n">OKM</span> <span class="o">+=</span> <span class="n">output_block</span>
+  <span class="k">return</span> <span class="n">OKM</span><span class="p">[:</span><span class="n">length</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HKDF"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.hkdf.HKDF">[docs]</a><span class="k">class</span> <span class="nc">HKDF</span><span class="p">():</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  HKDF follows the &quot;extract-then-expand&quot; paradigm, where the KDF logically</span>
+<span class="sd">  consists of two modules.  The first stage takes the input keying material</span>
+<span class="sd">  and &quot;extracts&quot; from it a fixed-length pseudorandom key K.  The second stage</span>
+<span class="sd">  &quot;expands&quot; the key K into several additional pseudorandom keys (the output</span>
+<span class="sd">  of the KDF).</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">input_key_material</span><span class="p">,</span> <span class="nb">hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="nb">hash</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_prk</span>  <span class="o">=</span> <span class="n">hkdf_extract</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="n">input_key_material</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HKDF.expand"><a class="viewcode-back" href="../../../api/tudoigual.ec.html#tudoigual.ec.hkdf.HKDF.expand">[docs]</a>  <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">32</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">hkdf_expand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prk</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">)</span></div></div>
+
+
+<span class="c1">#if __name__ == &#39;__main__&#39;:</span>
+  <span class="c1">#from binascii import unhexlify</span>
+  <span class="c1">#prk = hkdf_extract(unhexlify(b&quot;8e94ef805b93e683ff18&quot;), b&quot;asecretpassword&quot;)</span>
+  <span class="c1">#print (prk)</span>
+  <span class="c1">#key = hkdf_expand(prk, b&quot;context1&quot;, length = 16)</span>
+  <span class="c1">#print (key)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tudoigual.x509.ca &#8212; TUDOIGUAL 0.0.post0.dev38+n075f340.dirty documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.post0.dev38+n075f340.dirty',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TUDOIGUAL</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.post0.dev38+n075f340.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Module Reference</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for tudoigual.x509.ca</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;Certificate tool for sysadmins.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">ipaddress</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.asymmetric</span> <span class="k">import</span> <span class="n">ec</span><span class="p">,</span> <span class="n">rsa</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.hashes</span> <span class="k">import</span> <span class="n">SHA256</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.serialization</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Encoding</span><span class="p">,</span> <span class="n">PrivateFormat</span><span class="p">,</span> <span class="n">PublicFormat</span><span class="p">,</span>
+    <span class="n">BestAvailableEncryption</span><span class="p">,</span> <span class="n">NoEncryption</span><span class="p">,</span> <span class="n">load_pem_private_key</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cryptography.x509.oid</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">NameOID</span><span class="p">,</span> <span class="n">ExtendedKeyUsageOID</span><span class="p">,</span> <span class="n">ObjectIdentifier</span><span class="p">,</span>
+    <span class="n">ExtensionOID</span><span class="p">,</span> <span class="n">AuthorityInformationAccessOID</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cryptography</span> <span class="k">import</span> <span class="n">x509</span>
+
+
+<span class="c1"># __version__ = &#39;1.0.2&#39;</span>
+
+<span class="c1"># __all__ = [</span>
+<span class="c1">#     &#39;CertInfo&#39;,</span>
+<span class="c1">#     &#39;new_ec_key&#39;, &#39;new_rsa_key&#39;,</span>
+<span class="c1">#     &#39;load_key&#39;, &#39;load_req&#39;, &#39;load_cert&#39;,</span>
+<span class="c1">#     &#39;load_gpg_file&#39;, &#39;load_password&#39;,</span>
+<span class="c1">#     &#39;create_x509_req&#39;, &#39;create_x509_cert&#39;,</span>
+<span class="c1">#     &#39;key_to_pem&#39;, &#39;cert_to_pem&#39;, &#39;req_to_pem&#39;,</span>
+<span class="c1">#     #&#39;run_sysca&#39;</span>
+<span class="c1"># ]</span>
+
+<span class="c1">#</span>
+<span class="c1"># Shortcut maps</span>
+<span class="c1">#</span>
+
+<span class="n">MIN_RSA_BITS</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">MAX_RSA_BITS</span> <span class="o">=</span> <span class="mi">8192</span>
+
+<span class="n">EC_CURVES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;secp192r1&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="o">.</span><span class="n">SECP192R1</span><span class="p">,</span>
+    <span class="s1">&#39;secp224r1&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="o">.</span><span class="n">SECP224R1</span><span class="p">,</span>
+    <span class="s1">&#39;secp256r1&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="o">.</span><span class="n">SECP256R1</span><span class="p">,</span>
+    <span class="s1">&#39;secp384r1&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="o">.</span><span class="n">SECP384R1</span><span class="p">,</span>
+    <span class="s1">&#39;secp521r1&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="o">.</span><span class="n">SECP521R1</span><span class="p">,</span>
+    <span class="c1"># aliases</span>
+    <span class="s1">&#39;prime256v1&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="o">.</span><span class="n">SECP256R1</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">DN_CODE_TO_OID</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;CN&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">COMMON_NAME</span><span class="p">,</span>
+
+    <span class="s1">&#39;O&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">ORGANIZATION_NAME</span><span class="p">,</span>
+    <span class="s1">&#39;OU&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">ORGANIZATIONAL_UNIT_NAME</span><span class="p">,</span>
+
+    <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">COUNTRY_NAME</span><span class="p">,</span>
+    <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">LOCALITY_NAME</span><span class="p">,</span>
+    <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">STATE_OR_PROVINCE_NAME</span><span class="p">,</span>
+    <span class="s1">&#39;SA&#39;</span><span class="p">:</span> <span class="n">ObjectIdentifier</span><span class="p">(</span><span class="s1">&#39;2.5.4.9&#39;</span><span class="p">),</span>      <span class="c1"># streetAddress</span>
+
+    <span class="s1">&#39;SN&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">SURNAME</span><span class="p">,</span>
+    <span class="s1">&#39;GN&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">GIVEN_NAME</span><span class="p">,</span>
+    <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">TITLE</span><span class="p">,</span>
+    <span class="s1">&#39;GQ&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">GENERATION_QUALIFIER</span><span class="p">,</span>
+    <span class="s1">&#39;DQ&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">DN_QUALIFIER</span><span class="p">,</span>
+    <span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="n">NameOID</span><span class="o">.</span><span class="n">PSEUDONYM</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">KU_FIELDS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;digital_signature&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;content_commitment&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;key_encipherment&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;data_encipherment&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;key_agreement&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;key_cert_sign&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;crl_sign&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;encipher_only&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;decipher_only&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">XKU_CODE_TO_OID</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;any&#39;</span><span class="p">:</span> <span class="n">ObjectIdentifier</span><span class="p">(</span><span class="s1">&#39;2.5.29.37.0&#39;</span><span class="p">),</span>         <span class="c1"># anyExtendedKeyUsage</span>
+    <span class="s1">&#39;server&#39;</span><span class="p">:</span> <span class="n">ExtendedKeyUsageOID</span><span class="o">.</span><span class="n">SERVER_AUTH</span><span class="p">,</span>
+    <span class="s1">&#39;client&#39;</span><span class="p">:</span> <span class="n">ExtendedKeyUsageOID</span><span class="o">.</span><span class="n">CLIENT_AUTH</span><span class="p">,</span>
+    <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="n">ExtendedKeyUsageOID</span><span class="o">.</span><span class="n">CODE_SIGNING</span><span class="p">,</span>
+    <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">ExtendedKeyUsageOID</span><span class="o">.</span><span class="n">EMAIL_PROTECTION</span><span class="p">,</span>
+    <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">ExtendedKeyUsageOID</span><span class="o">.</span><span class="n">TIME_STAMPING</span><span class="p">,</span>
+    <span class="s1">&#39;ocsp&#39;</span><span class="p">:</span> <span class="n">ExtendedKeyUsageOID</span><span class="o">.</span><span class="n">OCSP_SIGNING</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">QUIET</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
+
+
+<div class="viewcode-block" id="as_bytes"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.as_bytes">[docs]</a><span class="k">def</span> <span class="nf">as_bytes</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return byte-string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="as_unicode"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.as_unicode">[docs]</a><span class="k">def</span> <span class="nf">as_unicode</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return unicode-string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">s</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_escape_char</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Backslash-escape.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">c</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">x</span><span class="si">%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="dn_escape"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.dn_escape">[docs]</a><span class="k">def</span> <span class="nf">dn_escape</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Distinguishedname backslash-escape&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[</span><span class="se">\\</span><span class="s1">/\x00-\x1F]&#39;</span><span class="p">,</span> <span class="n">_escape_char</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="list_escape"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.list_escape">[docs]</a><span class="k">def</span> <span class="nf">list_escape</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Escape value for comma-separated list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[</span><span class="se">\\</span><span class="s1">,]&#39;</span><span class="p">,</span> <span class="n">_escape_char</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_unescape_char</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Unescape helper</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xmap</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;,&#39;</span><span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">}</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">16</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">xmap</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="unescape"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.unescape">[docs]</a><span class="k">def</span> <span class="nf">unescape</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove backslash escapes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">(x[0-9a-fA-F][0-9a-fA-F]|.)&#39;</span><span class="p">,</span> <span class="n">_unescape_char</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="render_name"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.render_name">[docs]</a><span class="k">def</span> <span class="nf">render_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert DistinguishedName dict to &#39;/&#39;-separated string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">dn_escape</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="maybe_parse"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.maybe_parse">[docs]</a><span class="k">def</span> <span class="nf">maybe_parse</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">parse_func</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse argument value with func if string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">unicode</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">parse_func</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">val</span><span class="p">[:]</span>
+    <span class="k">return</span> <span class="n">val</span></div>
+
+
+<div class="viewcode-block" id="CertInfo"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo">[docs]</a><span class="k">class</span> <span class="nc">CertInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Container for certificate fields.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alt_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ca</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">usage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ocsp_urls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">crl_urls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">issuer_urls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">ocsp_nocheck</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">permit_subtrees</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_subtrees</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Setup up details.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            subject</span>
+<span class="sd">                dict if strings.</span>
+
+<span class="sd">            alt_names</span>
+<span class="sd">                list of gname strings</span>
+
+<span class="sd">            ca</span>
+<span class="sd">                boolean, isCA</span>
+
+<span class="sd">            path_length</span>
+<span class="sd">                max depth for CA&#39;s</span>
+
+<span class="sd">            usage</span>
+<span class="sd">                list of keywords (KU_FIELDS, XKU_CODE_TO_OID).</span>
+
+<span class="sd">            ocsp_urls</span>
+<span class="sd">                list of urls</span>
+
+<span class="sd">            crl_urls</span>
+<span class="sd">                list of urls</span>
+
+<span class="sd">            issuer_urls</span>
+<span class="sd">                list of urls</span>
+
+<span class="sd">            ocsp_nocheck</span>
+<span class="sd">                mark as not to be checked via OCSP</span>
+
+<span class="sd">            permit_subtrees</span>
+<span class="sd">                list of gnames for permitted subtrees</span>
+
+<span class="sd">            exclude_subtrees</span>
+<span class="sd">                list of gnames for excluded subtrees</span>
+
+<span class="sd">            load</span>
+<span class="sd">                object to extract from (cert or cert request)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ca</span> <span class="o">=</span> <span class="n">ca</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_length</span> <span class="o">=</span> <span class="n">path_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">parse_dn</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">san</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">alt_names</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">usage</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">usage</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_urls</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">ocsp_urls</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crl_urls</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">crl_urls</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">issuer_urls</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">issuer_urls</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude_subtrees</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">exclude_subtrees</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">permit_subtrees</span> <span class="o">=</span> <span class="n">maybe_parse</span><span class="p">(</span><span class="n">permit_subtrees</span><span class="p">,</span> <span class="n">parse_list</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_nocheck</span> <span class="o">=</span> <span class="n">ocsp_nocheck</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_length</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">load</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_from_existing</span><span class="p">(</span><span class="n">load</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CertInfo.load_from_existing"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.load_from_existing">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_existing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load certificate info from existing certificate or certificate request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_name</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">extensions</span><span class="p">:</span>
+            <span class="n">crit</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">critical</span>
+            <span class="n">extobj</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">BASIC_CONSTRAINTS</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">crit</span><span class="p">:</span>
+                    <span class="n">die</span><span class="p">(</span><span class="s2">&quot;BASIC_CONSTRAINTS must be critical&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ca</span> <span class="o">=</span> <span class="n">extobj</span><span class="o">.</span><span class="n">ca</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path_length</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">path_length</span> <span class="o">=</span> <span class="n">extobj</span><span class="o">.</span><span class="n">path_length</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">KEY_USAGE</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">crit</span><span class="p">:</span>
+                    <span class="n">die</span><span class="p">(</span><span class="s2">&quot;KEY_USAGE must be critical&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">usage</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_key_usage</span><span class="p">(</span><span class="n">extobj</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">SUBJECT_ALTERNATIVE_NAME</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">san</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_gnames</span><span class="p">(</span><span class="n">extobj</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">EXTENDED_KEY_USAGE</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">usage</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_xkey_usage</span><span class="p">(</span><span class="n">extobj</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">AUTHORITY_INFORMATION_ACCESS</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ad</span> <span class="ow">in</span> <span class="n">extobj</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">access_location</span><span class="p">,</span> <span class="n">x509</span><span class="o">.</span><span class="n">UniformResourceIdentifier</span><span class="p">):</span>
+                        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported access_location: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">access_location</span><span class="p">)</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">access_location</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">ad</span><span class="o">.</span><span class="n">access_method</span> <span class="o">==</span> <span class="n">AuthorityInformationAccessOID</span><span class="o">.</span><span class="n">CA_ISSUERS</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">issuer_urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">ad</span><span class="o">.</span><span class="n">access_method</span> <span class="o">==</span> <span class="n">AuthorityInformationAccessOID</span><span class="o">.</span><span class="n">OCSP</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported access_method: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">access_method</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">CRL_DISTRIBUTION_POINTS</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">extobj</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">dp</span><span class="o">.</span><span class="n">relative_name</span><span class="p">:</span>
+                        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;DistributionPoint.relative_name not supported&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">dp</span><span class="o">.</span><span class="n">crl_issuer</span><span class="p">:</span>
+                        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;DistributionPoint.crl_issuer not supported&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">dp</span><span class="o">.</span><span class="n">reasons</span><span class="p">:</span>
+                        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;DistributionPoint.reasons not supported&quot;</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">gn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_gnames</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">full_name</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">gn</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;uri:&#39;</span><span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">crl_urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gn</span><span class="p">[</span><span class="mi">4</span><span class="p">:])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported DistributionPoint: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">gn</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">NAME_CONSTRAINTS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">permit_subtrees</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_gnames</span><span class="p">(</span><span class="n">extobj</span><span class="o">.</span><span class="n">permitted_subtrees</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exclude_subtrees</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_gnames</span><span class="p">(</span><span class="n">extobj</span><span class="o">.</span><span class="n">excluded_subtrees</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">SUBJECT_KEY_IDENTIFIER</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">AUTHORITY_KEY_IDENTIFIER</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">oid</span> <span class="o">==</span> <span class="n">ExtensionOID</span><span class="o">.</span><span class="n">OCSP_NO_CHECK</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_nocheck</span> <span class="o">=</span> <span class="kc">True</span></div>
+            <span class="c1">#else:</span>
+            <span class="c1">#    die(&quot;Unsupported extension in CSR: %s&quot;, ext)</span>
+
+<div class="viewcode-block" id="CertInfo.extract_xkey_usage"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.extract_xkey_usage">[docs]</a>    <span class="k">def</span> <span class="nf">extract_xkey_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ext</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Walk oid list, return keywords.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">oidmap</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">XKU_CODE_TO_OID</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">oid</span> <span class="ow">in</span> <span class="n">ext</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">oid</span> <span class="ow">in</span> <span class="n">oidmap</span><span class="p">:</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oidmap</span><span class="p">[</span><span class="n">oid</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported ExtendedKeyUsage oid: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">oid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="CertInfo.extract_key_usage"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.extract_key_usage">[docs]</a>    <span class="k">def</span> <span class="nf">extract_key_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ext</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract list of tags from KeyUsage extension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">KU_FIELDS</span><span class="p">[:]</span>
+
+        <span class="c1"># &quot;error-on-access&quot;, real funny</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ext</span><span class="o">.</span><span class="n">key_agreement</span><span class="p">:</span>
+            <span class="n">fields</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;encipher_only&#39;</span><span class="p">)</span>
+            <span class="n">fields</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;decipher_only&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="CertInfo.extract_name"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.extract_name">[docs]</a>    <span class="k">def</span> <span class="nf">extract_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert Name object to shortcut-dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name_oid2code_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DN_CODE_TO_OID</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">att</span><span class="o">.</span><span class="n">oid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name_oid2code_map</span><span class="p">:</span>
+                <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported RDN: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">att</span><span class="p">)</span>
+            <span class="n">desc</span> <span class="o">=</span> <span class="n">name_oid2code_map</span><span class="p">[</span><span class="n">att</span><span class="o">.</span><span class="n">oid</span><span class="p">]</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">att</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">res</span><span class="p">[</span><span class="n">desc</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="CertInfo.extract_gnames"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.extract_gnames">[docs]</a>    <span class="k">def</span> <span class="nf">extract_gnames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ext</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert list of GeneralNames to list of prefixed strings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">gn</span> <span class="ow">in</span> <span class="n">ext</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gn</span><span class="p">,</span> <span class="n">x509</span><span class="o">.</span><span class="n">RFC822Name</span><span class="p">):</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;email:&#39;</span> <span class="o">+</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">gn</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gn</span><span class="p">,</span> <span class="n">x509</span><span class="o">.</span><span class="n">DNSName</span><span class="p">):</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;dns:&#39;</span> <span class="o">+</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">gn</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gn</span><span class="p">,</span> <span class="n">x509</span><span class="o">.</span><span class="n">UniformResourceIdentifier</span><span class="p">):</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;uri:&#39;</span> <span class="o">+</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">gn</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gn</span><span class="p">,</span> <span class="n">x509</span><span class="o">.</span><span class="n">IPAddress</span><span class="p">):</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;ip:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">gn</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gn</span><span class="p">,</span> <span class="n">x509</span><span class="o">.</span><span class="n">DirectoryName</span><span class="p">):</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_name</span><span class="p">(</span><span class="n">gn</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;dn:&#39;</span> <span class="o">+</span> <span class="n">render_name</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported subjectAltName type: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">gn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="CertInfo.load_name"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.load_name">[docs]</a>    <span class="k">def</span> <span class="nf">load_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nmap</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Name object from subject DN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">attlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nmap</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">oid</span> <span class="o">=</span> <span class="n">DN_CODE_TO_OID</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">NameAttribute</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="n">attlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x509</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">attlist</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CertInfo.get_name"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.get_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Name object from subject DN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CertInfo.load_gnames"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.load_gnames">[docs]</a>    <span class="k">def</span> <span class="nf">load_gnames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gname_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts list of prefixed strings to GeneralName list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gnames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">gname_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alt</span><span class="p">:</span>
+                <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Invalid gname: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
+            <span class="n">t</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;dn&#39;</span><span class="p">:</span>
+                <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">DirectoryName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_name</span><span class="p">(</span><span class="n">parse_dn</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;dns&#39;</span><span class="p">:</span>
+                <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">DNSName</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;email&#39;</span><span class="p">:</span>
+                <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">RFC822Name</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;uri&#39;</span><span class="p">:</span>
+                <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">UniformResourceIdentifier</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;ip&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">IPAddress</span><span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">IPv6Address</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">IPAddress</span><span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">IPv4Address</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;dn&#39;</span><span class="p">:</span>
+                <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">DirectoryName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_name</span><span class="p">(</span><span class="n">parse_dn</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;net&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">IPAddress</span><span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">IPv6Network</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">gn</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">IPAddress</span><span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">IPv4Network</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid GeneralName: &#39;</span> <span class="o">+</span> <span class="n">alt</span><span class="p">)</span>
+            <span class="n">gnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gnames</span></div>
+
+<div class="viewcode-block" id="CertInfo.get_san_gnames"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.get_san_gnames">[docs]</a>    <span class="k">def</span> <span class="nf">get_san_gnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return SubjectAltNames as GeneralNames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gnames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">san</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CertInfo.get_ocsp_gnames"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.get_ocsp_gnames">[docs]</a>    <span class="k">def</span> <span class="nf">get_ocsp_gnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return ocsp_urls as GeneralNames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uri:&#39;</span> <span class="o">+</span> <span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_urls</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gnames</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CertInfo.get_issuer_urls_gnames"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.get_issuer_urls_gnames">[docs]</a>    <span class="k">def</span> <span class="nf">get_issuer_urls_gnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return issuer_urls as GeneralNames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uri:&#39;</span> <span class="o">+</span> <span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">issuer_urls</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gnames</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CertInfo.get_crl_gnames"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.get_crl_gnames">[docs]</a>    <span class="k">def</span> <span class="nf">get_crl_gnames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return crl_urls as GeneralNames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uri:&#39;</span> <span class="o">+</span> <span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">crl_urls</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gnames</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CertInfo.install_extensions"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.install_extensions">[docs]</a>    <span class="k">def</span> <span class="nf">install_extensions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">builder</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add common extensions to Cert- or CSR builder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># BasicConstraints, critical</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">BasicConstraints</span><span class="p">(</span><span class="n">ca</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path_length</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">BasicConstraints</span><span class="p">(</span><span class="n">ca</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_length</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># KeyUsage, critical</span>
+        <span class="n">ku_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">KU_FIELDS</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+            <span class="n">ku_args</span><span class="p">[</span><span class="s1">&#39;key_cert_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">ku_args</span><span class="p">[</span><span class="s1">&#39;crl_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">make_key_usage</span><span class="p">(</span><span class="o">**</span><span class="n">ku_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ku_args</span><span class="p">[</span><span class="s1">&#39;digital_signature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">ku_args</span><span class="p">[</span><span class="s1">&#39;key_encipherment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">make_key_usage</span><span class="p">(</span><span class="o">**</span><span class="n">ku_args</span><span class="p">)</span>
+        <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># ExtendedKeyUsage, critical</span>
+        <span class="n">xku</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">KU_FIELDS</span><span class="p">]</span>
+        <span class="n">xku_bad</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xku</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">XKU_CODE_TO_OID</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">xku_bad</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unknown usage keywords: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">xku_bad</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">xku</span><span class="p">:</span>
+            <span class="n">xku_oids</span> <span class="o">=</span> <span class="p">[</span><span class="n">XKU_CODE_TO_OID</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xku</span><span class="p">]</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">ExtendedKeyUsage</span><span class="p">(</span><span class="n">xku_oids</span><span class="p">)</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># NameConstraints, critical</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude_subtrees</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">permit_subtrees</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+            <span class="n">allow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gnames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">permit_subtrees</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
+            <span class="n">disallow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_gnames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude_subtrees</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">NameConstraints</span><span class="p">(</span><span class="n">allow</span><span class="p">,</span> <span class="n">disallow</span><span class="p">)</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># SubjectAlternativeName</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">san</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">SubjectAlternativeName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_san_gnames</span><span class="p">())</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># CRLDistributionPoints</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">crl_urls</span><span class="p">:</span>
+            <span class="n">full_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_crl_gnames</span><span class="p">()</span>
+            <span class="n">reasons</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">crl_issuer</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">DistributionPoint</span><span class="p">(</span><span class="n">full_names</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">reasons</span><span class="p">,</span> <span class="n">crl_issuer</span><span class="p">)</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">CRLDistributionPoints</span><span class="p">([</span><span class="n">point</span><span class="p">])</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># AuthorityInformationAccess</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_urls</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">issuer_urls</span><span class="p">:</span>
+            <span class="n">oid</span> <span class="o">=</span> <span class="n">AuthorityInformationAccessOID</span><span class="o">.</span><span class="n">OCSP</span>
+            <span class="n">ocsp_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x509</span><span class="o">.</span><span class="n">AccessDescription</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span> <span class="n">gn</span><span class="p">)</span> <span class="k">for</span> <span class="n">gn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ocsp_gnames</span><span class="p">()]</span>
+            <span class="n">oid</span> <span class="o">=</span> <span class="n">AuthorityInformationAccessOID</span><span class="o">.</span><span class="n">CA_ISSUERS</span>
+            <span class="n">ca_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x509</span><span class="o">.</span><span class="n">AccessDescription</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span> <span class="n">gn</span><span class="p">)</span> <span class="k">for</span> <span class="n">gn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_issuer_urls_gnames</span><span class="p">()]</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">AuthorityInformationAccess</span><span class="p">(</span><span class="n">ocsp_list</span> <span class="o">+</span> <span class="n">ca_list</span><span class="p">)</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># OCSPNoCheck</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_nocheck</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">OCSPNoCheck</span><span class="p">()</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># configured builder</span>
+        <span class="k">return</span> <span class="n">builder</span></div>
+
+<div class="viewcode-block" id="CertInfo.show_list"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.show_list">[docs]</a>    <span class="k">def</span> <span class="nf">show_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="n">lst</span><span class="p">,</span> <span class="n">writeln</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print out list field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lst</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">list_escape</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">])</span>
+        <span class="n">writeln</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">desc</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CertInfo.show"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.CertInfo.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writeln</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print out details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">:</span>
+            <span class="n">writeln</span><span class="p">(</span><span class="s1">&#39;Subject: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">render_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;SAN&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">san</span><span class="p">,</span> <span class="n">writeln</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;Usage&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">,</span> <span class="n">writeln</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;OCSP URLs&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_urls</span><span class="p">,</span> <span class="n">writeln</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;Issuer URLs&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">issuer_urls</span><span class="p">,</span> <span class="n">writeln</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;CRL URLs&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">crl_urls</span><span class="p">,</span> <span class="n">writeln</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;Permit&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">permit_subtrees</span><span class="p">,</span> <span class="n">writeln</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;Exclude&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_subtrees</span><span class="p">,</span> <span class="n">writeln</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocsp_nocheck</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_list</span><span class="p">(</span><span class="s1">&#39;OCSP NoCheck&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;True&#39;</span><span class="p">],</span> <span class="n">writeln</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="get_backend"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.get_backend">[docs]</a><span class="k">def</span> <span class="nf">get_backend</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns backend to use.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">cryptography.hazmat.backends</span> <span class="k">import</span> <span class="n">default_backend</span>
+    <span class="k">return</span> <span class="n">default_backend</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="make_key_usage"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.make_key_usage">[docs]</a><span class="k">def</span> <span class="nf">make_key_usage</span><span class="p">(</span><span class="n">digital_signature</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">content_commitment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key_encipherment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">data_encipherment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key_agreement</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key_cert_sign</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">crl_sign</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encipher_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="n">decipher_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Default args for KeyUsage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">x509</span><span class="o">.</span><span class="n">KeyUsage</span><span class="p">(</span><span class="n">digital_signature</span><span class="o">=</span><span class="n">digital_signature</span><span class="p">,</span> <span class="n">content_commitment</span><span class="o">=</span><span class="n">content_commitment</span><span class="p">,</span>
+            <span class="n">key_encipherment</span><span class="o">=</span><span class="n">key_encipherment</span><span class="p">,</span> <span class="n">data_encipherment</span><span class="o">=</span><span class="n">data_encipherment</span><span class="p">,</span>
+            <span class="n">key_agreement</span><span class="o">=</span><span class="n">key_agreement</span><span class="p">,</span> <span class="n">key_cert_sign</span><span class="o">=</span><span class="n">key_cert_sign</span><span class="p">,</span> <span class="n">crl_sign</span><span class="o">=</span><span class="n">crl_sign</span><span class="p">,</span>
+            <span class="n">encipher_only</span><span class="o">=</span><span class="n">encipher_only</span><span class="p">,</span> <span class="n">decipher_only</span><span class="o">=</span><span class="n">decipher_only</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_x509_req"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.create_x509_req">[docs]</a><span class="k">def</span> <span class="nf">create_x509_req</span><span class="p">(</span><span class="n">privkey</span><span class="p">,</span> <span class="n">subject_info</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main CSR creation code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">CertificateSigningRequestBuilder</span><span class="p">()</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">subject_name</span><span class="p">(</span><span class="n">subject_info</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">subject_info</span><span class="o">.</span><span class="n">install_extensions</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+
+    <span class="c1"># final req</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="n">privkey</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">backend</span><span class="o">=</span><span class="n">get_backend</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">req</span></div>
+
+
+<div class="viewcode-block" id="create_x509_cert"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.create_x509_cert">[docs]</a><span class="k">def</span> <span class="nf">create_x509_cert</span><span class="p">(</span><span class="n">privkey</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">,</span> <span class="n">subject_info</span><span class="p">,</span> <span class="n">issuer_info</span><span class="p">,</span> <span class="n">days</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main cert creation code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subject_info</span><span class="p">,</span> <span class="n">CertInfo</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">CertInfo</span><span class="p">()</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">load_from_existing</span><span class="p">(</span><span class="n">subject_info</span><span class="p">)</span>
+        <span class="n">subject_info</span> <span class="o">=</span> <span class="n">info</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">issuer_info</span><span class="p">,</span> <span class="n">CertInfo</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">CertInfo</span><span class="p">()</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">load_from_existing</span><span class="p">(</span><span class="n">issuer_info</span><span class="p">)</span>
+        <span class="n">issuer_info</span> <span class="o">=</span> <span class="n">info</span>
+
+    <span class="n">dt_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+    <span class="n">dt_start</span> <span class="o">=</span> <span class="n">dt_now</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dt_end</span> <span class="o">=</span> <span class="n">dt_now</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+
+    <span class="n">builder</span> <span class="o">=</span> <span class="p">(</span><span class="n">x509</span><span class="o">.</span><span class="n">CertificateBuilder</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">subject_name</span><span class="p">(</span><span class="n">subject_info</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">issuer_name</span><span class="p">(</span><span class="n">issuer_info</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">not_valid_before</span><span class="p">(</span><span class="n">dt_start</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">not_valid_after</span><span class="p">(</span><span class="n">dt_end</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">serial_number</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
+        <span class="o">.</span><span class="n">public_key</span><span class="p">(</span><span class="n">pubkey</span><span class="p">))</span>
+
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">subject_info</span><span class="o">.</span><span class="n">install_extensions</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+
+    <span class="c1"># SubjectKeyIdentifier</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">SubjectKeyIdentifier</span><span class="o">.</span><span class="n">from_public_key</span><span class="p">(</span><span class="n">pubkey</span><span class="p">)</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># AuthorityKeyIdentifier</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">AuthorityKeyIdentifier</span><span class="o">.</span><span class="n">from_issuer_public_key</span><span class="p">(</span><span class="n">privkey</span><span class="o">.</span><span class="n">public_key</span><span class="p">())</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># IssuerAlternativeName</span>
+    <span class="k">if</span> <span class="n">issuer_info</span><span class="o">.</span><span class="n">san</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">IssuerAlternativeName</span><span class="p">(</span><span class="n">issuer_info</span><span class="o">.</span><span class="n">get_san_gnames</span><span class="p">())</span>
+        <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">add_extension</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">critical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># final cert</span>
+    <span class="n">cert</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">private_key</span><span class="o">=</span><span class="n">privkey</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">backend</span><span class="o">=</span><span class="n">get_backend</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">cert</span></div>
+
+
+<div class="viewcode-block" id="new_ec_key"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.new_ec_key">[docs]</a><span class="k">def</span> <span class="nf">new_ec_key</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;secp256r1&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;New Elliptic Curve key</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EC_CURVES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown curve&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ec</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">curve</span><span class="o">=</span><span class="n">EC_CURVES</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">backend</span><span class="o">=</span><span class="n">get_backend</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="new_rsa_key"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.new_rsa_key">[docs]</a><span class="k">def</span> <span class="nf">new_rsa_key</span><span class="p">(</span><span class="n">bits</span><span class="o">=</span><span class="mi">2048</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;New RSA key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">bits</span> <span class="o">&lt;</span> <span class="n">MIN_RSA_BITS</span> <span class="ow">or</span> <span class="n">bits</span> <span class="o">&gt;</span> <span class="n">MAX_RSA_BITS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Bad value for bits&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rsa</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">key_size</span><span class="o">=</span><span class="n">bits</span><span class="p">,</span> <span class="n">public_exponent</span><span class="o">=</span><span class="mi">65537</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">get_backend</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="key_to_pem"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.key_to_pem">[docs]</a><span class="k">def</span> <span class="nf">key_to_pem</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Serialize key in PEM format, optionally encrypted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">password</span><span class="p">:</span>
+        <span class="n">enc</span> <span class="o">=</span> <span class="n">BestAvailableEncryption</span><span class="p">(</span><span class="n">as_bytes</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">enc</span> <span class="o">=</span> <span class="n">NoEncryption</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">key</span><span class="o">.</span><span class="n">private_bytes</span><span class="p">(</span><span class="n">Encoding</span><span class="o">.</span><span class="n">PEM</span><span class="p">,</span> <span class="n">PrivateFormat</span><span class="o">.</span><span class="n">PKCS8</span><span class="p">,</span> <span class="n">enc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cert_to_pem"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.cert_to_pem">[docs]</a><span class="k">def</span> <span class="nf">cert_to_pem</span><span class="p">(</span><span class="n">cert</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Serialize certificate in PEM format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">cert</span><span class="o">.</span><span class="n">public_bytes</span><span class="p">(</span><span class="n">Encoding</span><span class="o">.</span><span class="n">PEM</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="req_to_pem"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.req_to_pem">[docs]</a><span class="k">def</span> <span class="nf">req_to_pem</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Serialize certificate request in PEM format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">req</span><span class="o">.</span><span class="n">public_bytes</span><span class="p">(</span><span class="n">Encoding</span><span class="o">.</span><span class="n">PEM</span><span class="p">)</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># Command-line UI</span>
+<span class="c1">#</span>
+
+<div class="viewcode-block" id="load_gpg_file"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.load_gpg_file">[docs]</a><span class="k">def</span> <span class="nf">load_gpg_file</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decrypt file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fn</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.gpg&#39;</span><span class="p">,</span> <span class="s1">&#39;.pgp&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gpg&#39;</span><span class="p">,</span> <span class="s1">&#39;-q&#39;</span><span class="p">,</span> <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--batch&#39;</span><span class="p">,</span> <span class="s1">&#39;--no-tty&#39;</span><span class="p">,</span> <span class="n">fn</span><span class="p">]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: gpg failed: </span><span class="se">\n</span><span class="s2">  </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+
+    <span class="c1"># cannot say &quot;you need to check sigs&quot; to gpg...</span>
+    <span class="k">if</span> <span class="s2">&quot;Good signature&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+        <span class="n">msg</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: No signature found&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="load_key"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.load_key">[docs]</a><span class="k">def</span> <span class="nf">load_key</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">psw</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read private key, decrypt if needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Need private key&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">psw</span><span class="p">:</span>
+        <span class="n">psw</span> <span class="o">=</span> <span class="n">as_bytes</span><span class="p">(</span><span class="n">psw</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_gpg_file</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">load_pem_private_key</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">psw</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">get_backend</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">key</span></div>
+
+
+<div class="viewcode-block" id="load_req"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.load_req">[docs]</a><span class="k">def</span> <span class="nf">load_req</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read CSR file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">load_pem_x509_csr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">get_backend</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">req</span></div>
+
+
+<div class="viewcode-block" id="load_cert"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.load_cert">[docs]</a><span class="k">def</span> <span class="nf">load_cert</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read CRT file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">crt</span> <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">load_pem_x509_certificate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">get_backend</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">crt</span></div>
+
+
+<div class="viewcode-block" id="load_password"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.load_password">[docs]</a><span class="k">def</span> <span class="nf">load_password</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read password from potentially gpg-encrypted file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_gpg_file</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="loop_escaped"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.loop_escaped">[docs]</a><span class="k">def</span> <span class="nf">loop_escaped</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse list of strings, separated by c.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">as_unicode</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([^</span><span class="si">%c</span><span class="se">\\</span><span class="s1">]|</span><span class="se">\\</span><span class="s1">.)*&#39;</span> <span class="o">%</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;rx bug&#39;</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+        <span class="k">yield</span> <span class="n">unescape</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="parse_list"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.parse_list">[docs]</a><span class="k">def</span> <span class="nf">parse_list</span><span class="p">(</span><span class="n">slist</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse comma-separated list to strings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">loop_escaped</span><span class="p">(</span><span class="n">slist</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">v</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="parse_dn"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.parse_dn">[docs]</a><span class="k">def</span> <span class="nf">parse_dn</span><span class="p">(</span><span class="n">dnstr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse openssl-style /-separated list to dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">loop_escaped</span><span class="p">(</span><span class="n">dnstr</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;=&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Need k=v in Name string&quot;</span><span class="p">)</span>
+        <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Double key: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dnstr</span><span class="p">)</span>
+        <span class="n">res</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="same_pubkey"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.same_pubkey">[docs]</a><span class="k">def</span> <span class="nf">same_pubkey</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compare public keys.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">PublicFormat</span><span class="o">.</span><span class="n">SubjectPublicKeyInfo</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">o1</span><span class="o">.</span><span class="n">public_key</span><span class="p">()</span><span class="o">.</span><span class="n">public_bytes</span><span class="p">(</span><span class="n">Encoding</span><span class="o">.</span><span class="n">PEM</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">o2</span><span class="o">.</span><span class="n">public_key</span><span class="p">()</span><span class="o">.</span><span class="n">public_bytes</span><span class="p">(</span><span class="n">Encoding</span><span class="o">.</span><span class="n">PEM</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p1</span> <span class="o">==</span> <span class="n">p2</span></div>
+
+
+<div class="viewcode-block" id="die"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.die">[docs]</a><span class="k">def</span> <span class="nf">die</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print message and exit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">%</span> <span class="n">args</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="msg"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.msg">[docs]</a><span class="k">def</span> <span class="nf">msg</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print message to stderr.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">QUIET</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">%</span> <span class="n">args</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="do_output"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.do_output">[docs]</a><span class="k">def</span> <span class="nf">do_output</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Output X509 structure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;openssl&#39;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;-text&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">out</span><span class="p">:</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-out&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out</span><span class="p">])</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">out</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">as_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">as_unicode</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="newkey_command"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.newkey_command">[docs]</a><span class="k">def</span> <span class="nf">newkey_command</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create new key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># parse key-type argument</span>
+    <span class="n">short</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ec&#39;</span><span class="p">:</span> <span class="s1">&#39;ec:secp256r1&#39;</span><span class="p">,</span> <span class="s1">&#39;rsa&#39;</span><span class="p">:</span> <span class="s1">&#39;rsa:2048&#39;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unexpected positional arguments&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+        <span class="n">keydesc</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">keydesc</span> <span class="o">=</span> <span class="s1">&#39;ec&#39;</span>
+    <span class="n">keydesc</span> <span class="o">=</span> <span class="n">short</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keydesc</span><span class="p">,</span> <span class="n">keydesc</span><span class="p">)</span>
+
+    <span class="c1"># create key</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">keydesc</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;ec&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">new_ec_key</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Invalid curve: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="s1">&#39;rsa&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">new_rsa_key</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Invalid value for RSA bits: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s1">&#39;Bad key type: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">msg</span><span class="p">(</span><span class="s2">&quot;New key: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">keydesc</span><span class="p">)</span>
+
+    <span class="c1"># Output with optional encryption</span>
+    <span class="n">psw</span> <span class="o">=</span> <span class="n">load_password</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">password_file</span><span class="p">)</span>
+    <span class="n">pem</span> <span class="o">=</span> <span class="n">key_to_pem</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">psw</span><span class="p">)</span>
+    <span class="n">do_output</span><span class="p">(</span><span class="n">pem</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="info_from_args"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.info_from_args">[docs]</a><span class="k">def</span> <span class="nf">info_from_args</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Collect command-line args</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subject_info</span> <span class="o">=</span> <span class="n">CertInfo</span><span class="p">(</span>
+        <span class="n">subject</span><span class="o">=</span><span class="n">parse_dn</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">subject</span><span class="p">),</span>
+        <span class="n">usage</span><span class="o">=</span><span class="n">parse_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">usage</span><span class="p">),</span>
+        <span class="n">alt_names</span><span class="o">=</span><span class="n">parse_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">san</span><span class="p">),</span>
+        <span class="n">ocsp_nocheck</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">ocsp_nocheck</span><span class="p">,</span>
+        <span class="n">ocsp_urls</span><span class="o">=</span><span class="n">parse_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ocsp_urls</span><span class="p">),</span>
+        <span class="n">crl_urls</span><span class="o">=</span><span class="n">parse_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">crl_urls</span><span class="p">),</span>
+        <span class="n">issuer_urls</span><span class="o">=</span><span class="n">parse_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">issuer_urls</span><span class="p">),</span>
+        <span class="n">permit_subtrees</span><span class="o">=</span><span class="n">parse_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">permit_subtrees</span><span class="p">),</span>
+        <span class="n">exclude_subtrees</span><span class="o">=</span><span class="n">parse_list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">exclude_subtrees</span><span class="p">),</span>
+        <span class="n">ca</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">CA</span><span class="p">,</span>
+        <span class="n">path_length</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">path_length</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">subject_info</span></div>
+
+
+<div class="viewcode-block" id="msg_show"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.msg_show">[docs]</a><span class="k">def</span> <span class="nf">msg_show</span><span class="p">(</span><span class="n">ln</span><span class="p">):</span>
+    <span class="n">msg</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="req_command"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.req_command">[docs]</a><span class="k">def</span> <span class="nf">req_command</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load args, create CSR.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unexpected positional arguments&quot;</span><span class="p">)</span>
+
+    <span class="n">subject_info</span> <span class="o">=</span> <span class="n">info_from_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">subject_info</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+        <span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Request for CA cert&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Request for end-entity cert&#39;</span><span class="p">)</span>
+    <span class="n">subject_info</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">msg_show</span><span class="p">)</span>
+
+    <span class="c1"># Load private key, create req</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">load_key</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">load_password</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">password_file</span><span class="p">))</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">create_x509_req</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">subject_info</span><span class="p">)</span>
+    <span class="n">do_output</span><span class="p">(</span><span class="n">req_to_pem</span><span class="p">(</span><span class="n">req</span><span class="p">),</span> <span class="n">args</span><span class="p">,</span> <span class="s1">&#39;req&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sign_command"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.sign_command">[docs]</a><span class="k">def</span> <span class="nf">sign_command</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load args, output cert.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unexpected positional arguments&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Certificate duration</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">days</span>
+    <span class="k">if</span> <span class="n">days</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Need --days&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">days</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Invalid --days&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Load CA info</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">ca_info</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Need --ca-info&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ca_info</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.csr&#39;</span><span class="p">):</span>
+        <span class="n">issuer_obj</span> <span class="o">=</span> <span class="n">load_req</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ca_info</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">issuer_obj</span> <span class="o">=</span> <span class="n">load_cert</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ca_info</span><span class="p">)</span>
+    <span class="n">issuer_info</span> <span class="o">=</span> <span class="n">CertInfo</span><span class="p">(</span><span class="n">load</span><span class="o">=</span><span class="n">issuer_obj</span><span class="p">)</span>
+
+    <span class="c1"># Load certificate request</span>
+    <span class="n">subject_csr</span> <span class="o">=</span> <span class="n">load_req</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">subject_info</span> <span class="o">=</span> <span class="n">CertInfo</span><span class="p">(</span><span class="n">load</span><span class="o">=</span><span class="n">subject_csr</span><span class="p">)</span>
+
+    <span class="c1"># Check CA params</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">same_pubkey</span><span class="p">(</span><span class="n">subject_csr</span><span class="p">,</span> <span class="n">issuer_obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issuer_info</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Issuer must be CA.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;key_cert_sign&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">issuer_info</span><span class="o">.</span><span class="n">usage</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Issuer CA is not allowed to sign certs.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">subject_info</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">same_pubkey</span><span class="p">(</span><span class="n">subject_csr</span><span class="p">,</span> <span class="n">issuer_obj</span><span class="p">):</span>
+            <span class="c1"># not selfsigning, check depth</span>
+            <span class="k">if</span> <span class="n">issuer_info</span><span class="o">.</span><span class="n">path_length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Issuer cannot sign sub-CAs&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">issuer_info</span><span class="o">.</span><span class="n">path_length</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">args</span><span class="o">.</span><span class="n">path_length</span><span class="p">:</span>
+                <span class="n">die</span><span class="p">(</span><span class="s2">&quot;--path-length not allowed by issuer&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Load subject&#39;s public key, check sanity</span>
+    <span class="n">pkey</span> <span class="o">=</span> <span class="n">subject_csr</span><span class="o">.</span><span class="n">public_key</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pkey</span><span class="p">,</span> <span class="n">ec</span><span class="o">.</span><span class="n">EllipticCurvePublicKey</span><span class="p">):</span>
+        <span class="n">pkeyinfo</span> <span class="o">=</span> <span class="s1">&#39;ec:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkey</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pkey</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EC_CURVES</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Curve not allowed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pkey</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pkey</span><span class="p">,</span> <span class="n">rsa</span><span class="o">.</span><span class="n">RSAPublicKey</span><span class="p">):</span>
+        <span class="n">pkeyinfo</span> <span class="o">=</span> <span class="s1">&#39;rsa:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkey</span><span class="o">.</span><span class="n">key_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pkey</span><span class="o">.</span><span class="n">key_size</span> <span class="o">&lt;</span> <span class="n">MIN_RSA_BITS</span> <span class="ow">or</span> <span class="n">pkey</span><span class="o">.</span><span class="n">key_size</span> <span class="o">&gt;</span> <span class="n">MAX_RSA_BITS</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;RSA size not allowed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pkey</span><span class="o">.</span><span class="n">key_size</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported public key: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">pkey</span><span class="p">))</span>
+
+    <span class="c1"># Report</span>
+    <span class="k">if</span> <span class="n">subject_info</span><span class="o">.</span><span class="n">ca</span><span class="p">:</span>
+        <span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Signing CA cert [</span><span class="si">%s</span><span class="s1">] - </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">pkeyinfo</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Signing end-entity cert [</span><span class="si">%s</span><span class="s1">] - </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">pkeyinfo</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Issuer name: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">render_name</span><span class="p">(</span><span class="n">issuer_info</span><span class="o">.</span><span class="n">subject</span><span class="p">))</span>
+    <span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Subject:&#39;</span><span class="p">)</span>
+    <span class="n">subject_info</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">msg_show</span><span class="p">)</span>
+
+    <span class="c1"># Load CA private key</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">load_key</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ca_key</span><span class="p">,</span> <span class="n">load_password</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">password_file</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">same_pubkey</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">issuer_obj</span><span class="p">):</span>
+        <span class="n">die</span><span class="p">(</span><span class="s2">&quot;--ca-private-key does not match --ca-info data&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Stamp request</span>
+    <span class="n">cert</span> <span class="o">=</span> <span class="n">create_x509_cert</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">subject_csr</span><span class="o">.</span><span class="n">public_key</span><span class="p">(),</span> <span class="n">subject_info</span><span class="p">,</span> <span class="n">issuer_info</span><span class="p">,</span> <span class="n">days</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">days</span><span class="p">)</span>
+    <span class="n">do_output</span><span class="p">(</span><span class="n">cert_to_pem</span><span class="p">(</span><span class="n">cert</span><span class="p">),</span> <span class="n">args</span><span class="p">,</span> <span class="s1">&#39;x509&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="show_command"><a class="viewcode-back" href="../../../api/tudoigual.x509.html#tudoigual.x509.ca.show_command">[docs]</a><span class="k">def</span> <span class="nf">show_command</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dump .crt and .csr files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fn</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.csr&#39;</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;openssl&#39;</span><span class="p">,</span> <span class="s1">&#39;req&#39;</span><span class="p">,</span> <span class="s1">&#39;-in&#39;</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;-text&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.crt&#39;</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;openssl&#39;</span><span class="p">,</span> <span class="s1">&#39;x509&#39;</span><span class="p">,</span> <span class="s1">&#39;-in&#39;</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;-text&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">die</span><span class="p">(</span><span class="s2">&quot;Unsupported file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+
+
+<span class="c1"># def setup_args():</span>
+<span class="c1">#     &quot;&quot;&quot;Create ArgumentParser</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     p = argparse.ArgumentParser(description=__doc__.strip(), fromfile_prefix_chars=&#39;@&#39;,</span>
+<span class="c1">#                                 usage=&quot;%(prog)s --help | --version\n&quot; +</span>
+<span class="c1">#                                 &quot;       %(prog)s new-key [KEY_TYPE] [--password-file FN] [--out FN]\n&quot; +</span>
+<span class="c1">#                                 &quot;       %(prog)s request --key KEY_FILE [--subject DN] [--san ALT] [...]\n&quot; +</span>
+<span class="c1">#                                 &quot;       %(prog)s sign --request FN --ca-key FN --ca-info FN --days N [...]\n&quot; +</span>
+<span class="c1">#                                 &quot;       %(prog)s show FILE&quot;)</span>
+<span class="c1">#     p.add_argument(&#39;--version&#39;, help=&#39;show version and exit&#39;, action=&#39;version&#39;,</span>
+<span class="c1">#                    version=&#39;%(prog)s &#39; + __version__)</span>
+<span class="c1">#     p.add_argument(&#39;--password-file&#39;, help=&#39;File to load password from&#39;, metavar=&#39;FN&#39;)</span>
+<span class="c1">#     p.add_argument(&#39;--text&#39;, help=&#39;Add human-readable text about output&#39;, action=&#39;store_true&#39;)</span>
+<span class="c1">#     p.add_argument(&#39;--out&#39;, help=&#39;File to write output to, instead stdout&#39;, metavar=&#39;FN&#39;)</span>
+<span class="c1">#     p.add_argument(&#39;--quiet&#39;, &#39;-q&#39;, help=&#39;Be quiet&#39;, action=&#39;store_true&#39;)</span>
+<span class="c1">#     p.add_argument(&#39;command&#39;, help=argparse.SUPPRESS)</span>
+
+<span class="c1">#     p.add_argument_group(&#39;Command &quot;new-key&quot;&#39;,</span>
+<span class="c1">#                          &quot;Generate new EC or RSA key.  Key type can be either ec:&lt;curve&gt; &quot;</span>
+<span class="c1">#                          &quot;or rsa:&lt;bits&gt;.  Default: ec:secp256r1.&quot;)</span>
+
+<span class="c1">#     g2 = p.add_argument_group(&#39;Command &quot;request&quot;&#39;,</span>
+<span class="c1">#                               &quot;Create certificate request for private key&quot;)</span>
+<span class="c1">#     g2.add_argument(&#39;--key&#39;, help=&#39;Private key file&#39;, metavar=&#39;FN&#39;)</span>
+
+<span class="c1">#     g2 = p.add_argument_group(&quot;Certificate fields&quot;)</span>
+<span class="c1">#     g2.add_argument(&#39;--subject&#39;, help=&#39;Subject Distinguished Name - /CN=foo/O=Org/OU=Web/&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--san&#39;,</span>
+<span class="c1">#                     help=&#39;SubjectAltNames - dns:hostname, email:addrspec, ip:ipaddr, uri:url, dn:DirName.&#39;,</span>
+<span class="c1">#                     metavar=&#39;GNAMES&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--CA&#39;, help=&#39;Request CA cert.  Default: not set.&#39;, action=&#39;store_true&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--path-length&#39;,</span>
+<span class="c1">#                     help=&#39;Max levels of sub-CAs.  Default: 0&#39;,</span>
+<span class="c1">#                     type=int, default=0, metavar=&#39;DEPTH&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--usage&#39;, help=&#39;Keywords: client, server, code, email, time, ocsp.&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--ocsp-urls&#39;, help=&#39;URLs for OCSP info.&#39;, metavar=&#39;URLS&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--ocsp-nocheck&#39;, help=&#39;Disable OCSP check.&#39;, action=&#39;store_true&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--crl-urls&#39;, help=&#39;URLs URL for CRL data.&#39;, metavar=&#39;URLS&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--issuer-urls&#39;, help=&#39;URLs for issuer cert.&#39;, metavar=&#39;URLS&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--permit-subtrees&#39;, help=&#39;Allowed NameConstraints.&#39;, metavar=&#39;GNAMES&#39;)</span>
+<span class="c1">#     g2.add_argument(&#39;--exclude-subtrees&#39;, help=&#39;Disallowed NameConstraints.&#39;, metavar=&#39;GNAMES&#39;)</span>
+
+<span class="c1">#     g3 = p.add_argument_group(&#39;Command &quot;sign&quot;&#39;,</span>
+<span class="c1">#                               &quot;Create certificate for key in certificate request.  &quot;</span>
+<span class="c1">#                               &quot;All metadata is taken from certificate request file.&quot;)</span>
+<span class="c1">#     g3.add_argument(&#39;--ca-key&#39;, help=&#39;Private key file.&#39;, metavar=&#39;FN&#39;)</span>
+<span class="c1">#     g3.add_argument(&#39;--ca-info&#39;, help=&#39;Filename of CA details (CRT or CSR).&#39;, metavar=&#39;FN&#39;)</span>
+<span class="c1">#     g3.add_argument(&#39;--request&#39;, help=&#39;Filename of certificate request (CSR) to be signed.&#39;, metavar=&#39;FN&#39;)</span>
+<span class="c1">#     g3.add_argument(&#39;--days&#39;, help=&#39;Certificate lifetime in days&#39;, type=int)</span>
+
+<span class="c1">#     g4 = p.add_argument_group(&#39;Command &quot;show&quot;&#39;,</span>
+<span class="c1">#                               &quot;Show CSR or CRT file contents.  Takes .crt or .csr filenames as arguments.&quot;)</span>
+<span class="c1">#     g4.add_argument(&#39;files&#39;, help=argparse.SUPPRESS, nargs=&#39;*&#39;)</span>
+
+<span class="c1">#     return p</span>
+
+
+<span class="c1"># def run_sysca(argv):</span>
+<span class="c1">#     &quot;&quot;&quot;Parse args, run command.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     global QUIET</span>
+
+<span class="c1">#     ap = setup_args()</span>
+<span class="c1">#     args = ap.parse_args(argv)</span>
+<span class="c1">#     if args.quiet:</span>
+<span class="c1">#         QUIET = True</span>
+<span class="c1">#     if args.command == &#39;new-key&#39;:</span>
+<span class="c1">#         newkey_command(args)</span>
+<span class="c1">#     elif args.command == &#39;request&#39;:</span>
+<span class="c1">#         req_command(args)</span>
+<span class="c1">#     elif args.command == &#39;sign&#39;:</span>
+<span class="c1">#         sign_command(args)</span>
+<span class="c1">#     elif args.command == &#39;show&#39;:</span>
+<span class="c1">#         show_command(args)</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         die(&quot;Unknown command: %s&quot;, args.command)</span>
+
+
+<span class="c1"># def main():</span>
+<span class="c1">#     &quot;&quot;&quot;Command-line application entry point.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     return run_sysca(sys.argv[1:])</span>
+
+
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#     main()</span>
+
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, rcoliveira.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
